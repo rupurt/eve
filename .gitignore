@@ -1,0 +1,6 @@
+node_modules
+eve.yaml
+eve.config.ts
+eve.config.js
+.eve
+.local
