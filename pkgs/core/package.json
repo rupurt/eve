@@ -1,0 +1,67 @@
+{
+  "name": "@evereactor/core",
+  "version": "0.0.1",
+  "description": "core event streaming library",
+  "author": "Alex Kwiatkowski",
+  "license": "MIT",
+  "main": "lib/main.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "prettier": "prettier . --write",
+    "prettier:check": "prettier . --check",
+    "lint": "npm run prettier:check && npm run eslint",
+    "eslint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest watch",
+    "test:ci": "vitest run",
+    "coverage": "vitest run --coverage",
+    "clean": "npm run clean:lib",
+    "clean:lib": "rm -rf lib",
+    "typedoc": "typedoc",
+    "build": "npm run build:ts",
+    "build:ts": "NODE_ENV=production tsc"
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "dependencies": {
+    "@oclif/core": "^3.5.0",
+    "@oclif/plugin-autocomplete": "^2.3.10",
+    "@tweedegolf/storage-abstraction": "^1.4.6",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
+    "convict": "^6.2.4",
+    "convict-format-with-validator": "^6.2.0",
+    "fastify": "^4.24.3",
+    "pino": "^8.16.1",
+    "suppress-experimental-warnings": "^1.1.17",
+    "verror": "^1.10.1",
+    "yaml": "^2.3.2",
+    "yamlify-object": "^1.0.0",
+    "yamlify-object-colors": "^1.0.3"
+  },
+  "devDependencies": {
+    "@oclif/prettier-config": "^0.2.1",
+    "@oclif/test": "^3.0.2",
+    "@types/convict": "^6.1.5",
+    "@types/prompts": "^2.4.5",
+    "@types/verror": "^1.10.7",
+    "@vitest/coverage-v8": "^0.34.6",
+    "eslint": "^8.51.0",
+    "eslint-config-oclif": "^5.0.0",
+    "eslint-config-oclif-typescript": "^3.0.6",
+    "fastify-cli": "^5.8.0",
+    "prettier": "^3.0.3",
+    "tsx": "^3.14.0",
+    "typedoc": "^0.25.2",
+    "typedoc-theme-hierarchy": "^4.1.2",
+    "vite-node": "^0.34.6",
+    "vitest": "^0.34.6"
+  }
+}
