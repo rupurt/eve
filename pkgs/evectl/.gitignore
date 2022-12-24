@@ -1,0 +1,10 @@
+node_modules
+*.tsbuildinfo
+esm
+cjs
+umd
+dist
+bin
+rel
+public
+coverage

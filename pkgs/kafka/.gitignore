@@ -1,0 +1,8 @@
+node_modules
+tsconfig.tsbuildinfo
+lib
+dist
+bin
+rel
+public
+coverage

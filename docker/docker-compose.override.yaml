@@ -1,0 +1,50 @@
+version: "3.8"
+
+services:
+  broker-1:
+    image: evereactor/broker:latest
+    build:
+      context: .
+      dockerfile: docker/broker.Dockerfile
+
+  broker-2:
+    image: evereactor/broker:latest
+    build:
+      context: .
+      dockerfile: docker/broker.Dockerfile
+
+  broker-3:
+    image: evereactor/broker:latest
+    build:
+      context: .
+      dockerfile: docker/broker.Dockerfile
+
+  broker-4:
+    image: evereactor/broker:latest
+    build:
+      context: .
+      dockerfile: docker/broker.Dockerfile
+
+  cluster-1:
+    image: evereactor/cluster:latest
+    build:
+      context: .
+      dockerfile: docker/cluster.Dockerfile
+  
+  cluster-2:
+    image: evereactor/cluster:latest
+    build:
+      context: .
+      dockerfile: docker/cluster.Dockerfile
+  
+  kafkagateway:
+    image: evereactor/kafka:latest
+    build:
+      context: .
+      dockerfile: docker/kafka.Dockerfile
+  
+  webui:
+    image: evereactor/webui:latest
+    build:
+      context: .
+      dockerfile: docker/webui.Dockerfile
