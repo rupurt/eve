@@ -1,0 +1,45 @@
+{
+  "name": "@evereactor/client",
+  "version": "0.0.1",
+  "description": "typescript client sdk",
+  "author": "Alex Kwiatkowski",
+  "license": "MIT",
+  "main": "lib/main.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "tsx src/main.ts",
+    "prettier": "prettier . --write",
+    "prettier:check": "prettier . --check",
+    "lint": "npm run prettier:check && npm run eslint",
+    "eslint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest watch",
+    "test:ci": "vitest run",
+    "coverage": "vitest run --coverage",
+    "clean": "npm run clean:lib",
+    "clean:lib": "rm -rf lib",
+    "typedoc": "typedoc",
+    "build": "npm run build:ts",
+    "build:ts": "tsc"
+  },
+  "dependencies": {
+    "verror": "^1.10.1"
+  },
+  "devDependencies": {
+    "@types/verror": "^1.10.7",
+    "@vitest/coverage-v8": "^0.34.6",
+    "eslint": "^8.51.0",
+    "eslint-config-oclif": "^5.0.0",
+    "eslint-config-oclif-typescript": "^3.0.6",
+    "prettier": "^3.0.3",
+    "tsx": "^3.14.0",
+    "typedoc": "^0.25.2",
+    "typedoc-theme-hierarchy": "^4.1.2",
+    "vitest": "^0.34.6"
+  }
+}

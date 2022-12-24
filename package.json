@@ -1,0 +1,31 @@
+{
+  "name": "@evereactor/eve",
+  "version": "0.0.1",
+  "description": "reactive event driven applications with bottomless storage",
+  "author": "Alex Kwiatkowski",
+  "workspaces": [
+    "pkgs/*"
+  ],
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "lint": "npm run lint --workspaces",
+    "prettier": "npm run prettier --workspaces",
+    "prettier:check": "npm run prettier:check --workspaces",
+    "eslint": "npm run eslint --workspaces",
+    "test": "npm run test --workspaces",
+    "test:ci": "npm run test:ci --workspaces",
+    "coverage": "npm run coverage --workspaces",
+    "typedoc": "npm run typedoc --workspaces",
+    "clean": "npm run clean --if-present --workspaces",
+    "build": "npm run build --if-present --workspaces",
+    "release": "npm run release --if-present --workspaces"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "@types/node": "^20.8.7",
+    "typescript": "^5.2.2",
+    "tslib": "^2.6.2"
+  }
+}

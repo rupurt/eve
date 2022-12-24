@@ -1,0 +1,119 @@
+{
+  "name": "@evereactor/ucli",
+  "version": "0.0.1",
+  "description": "universal cli single binary",
+  "author": "Alex Kwiatkowski",
+  "license": "MIT",
+  "main": "lib/main.js",
+  "bin": "dist/index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "files": [],
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "vite-node src/main.ts",
+    "prettier": "prettier . --write",
+    "prettier:check": "prettier . --check",
+    "lint": "npm run prettier:check && npm run eslint",
+    "eslint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest watch",
+    "test:ci": "vitest run",
+    "coverage": "vitest run --coverage",
+    "clean": "npm run clean:buildinfo && npm run clean:lib && npm run clean:dist && npm run clean:bin && npm run clean:rel",
+    "clean:buildinfo": "rm -f tsconfig.tsbuildinfo",
+    "clean:lib": "rm -rf lib",
+    "clean:dist": "rm -rf dist",
+    "clean:bin": "rm -rf bin",
+    "clean:rel": "rm -rf rel",
+    "typedoc": "typedoc",
+    "build": "npm run build:ts && npm run build:dist && npm run build:exe",
+    "build:ts": "tsc",
+    "build:dist": "esbuild src/main.ts --bundle --platform=node --outfile=dist/index.js",
+    "build:exe": "pkg .",
+    "build:sea": "npm run build:sea:blob && npm run build:sea:cpnode && npm run build:sea:postject",
+    "build:sea:blob": "node --experimental-sea-config sea-config.json",
+    "build:sea:cpnode": "cp $(command -v node) bin/ucli-linux && chmod +w bin/ucli-linux",
+    "build:sea:postject": "npx postject bin/ucli-linux NODE_SEA_BLOB bin/sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2 && chmod -w bin/ucli-linux",
+    "release": "npm run tar && npm run zip",
+    "tar": "npm run tar:linux && npm run tar:alpine && npm run tar:mac && npm run tar:win",
+    "tar:linux": "mkdir -p rel && tar -C bin --transform 'flags=r;s|ucli-linux|eve|' -czvf rel/ucli-linux-x86.tar.gz ucli-linux",
+    "tar:alpine": "mkdir -p rel && tar -C bin --transform 'flags=r;s|ucli-alpine|eve|' -czvf rel/ucli-alpine-x86.tar.gz ucli-alpine",
+    "tar:mac": "mkdir -p rel && tar -C bin --transform 'flags=r;s|ucli-macos|eve|' -czvf rel/ucli-mac-x86.tar.gz ucli-macos",
+    "tar:win": "mkdir -p rel && tar -C bin --transform 'flags=r;s|ucli-win|eve|' -czvf rel/ucli-win-x86.tar.gz ucli-win.exe",
+    "zip": "npm run zip:linux && npm run zip:alpine && npm run zip:mac && npm run zip:win",
+    "zip:linux": "mkdir -p rel && zip rel/ucli-linux-x86.zip bin/ucli-linux -j bin && printf '@ ucli-linux\n@=eve\n' | zipnote -w rel/ucli-linux-x86.zip",
+    "zip:alpine": "mkdir -p rel && zip rel/ucli-alpine-x86.zip bin/ucli-alpine -j bin && printf '@ ucli-alpine\n@=eve\n' | zipnote -w rel/ucli-alpine-x86.zip",
+    "zip:mac": "mkdir -p rel && zip rel/ucli-mac-x86.zip bin/ucli-macos -j bin && printf '@ ucli-macos\n@=eve\n' | zipnote -w rel/ucli-mac-x86.zip",
+    "zip:win": "mkdir -p rel && zip rel/ucli-win-x86.zip bin/ucli-win.exe -j bin && printf '@ ucli-win.exe\n@=eve.exe\n' | zipnote -w rel/ucli-win-x86.zip"
+  },
+  "oclif": {
+    "bin": "eve",
+    "dirname": "eve",
+    "commands": "./lib/commands",
+    "plugins": [
+      "@oclif/plugin-autocomplete"
+    ],
+    "topicSeparator": " ",
+    "topics": {
+      "broker": {
+        "description": "broker subcommands"
+      }
+    }
+  },
+  "pkg": {
+    "scripts": [
+      "lib/**/*.js"
+    ],
+    "assets": [
+      "../../package.json",
+      "../package.json",
+      "package.json",
+      "node_modules/chalk/**",
+      "node_modules/supports-color/**",
+      "node_modules/@isaacs/cliui/**",
+      "node_modules/wrap-ansi/**",
+      "node_modules/ts-api-utils/**"
+    ],
+    "targets": [
+      "node18-linux",
+      "node18-alpine",
+      "node18-mac",
+      "node18-win"
+    ],
+    "outputPath": "bin"
+  },
+  "dependencies": {
+    "@eve/broker": "^0.0.1",
+    "@oclif/core": "^3.5.0",
+    "@oclif/plugin-autocomplete": "^2.3.10",
+    "@tweedegolf/storage-abstraction": "^1.4.6",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
+    "suppress-experimental-warnings": "^1.1.17",
+    "verror": "^1.10.1",
+    "yaml": "^2.3.2",
+    "yamlify-object": "^1.0.0",
+    "yamlify-object-colors": "^1.0.3"
+  },
+  "devDependencies": {
+    "@oclif/prettier-config": "^0.2.1",
+    "@oclif/test": "^3.0.2",
+    "@types/prompts": "^2.4.5",
+    "@types/verror": "^1.10.7",
+    "@vitest/coverage-v8": "^0.34.6",
+    "eslint": "^8.51.0",
+    "eslint-config-oclif": "^5.0.0",
+    "eslint-config-oclif-typescript": "^3.0.6",
+    "pkg": "^5.8.1",
+    "prettier": "^3.0.3",
+    "tempy": "^3.1.0",
+    "typedoc": "^0.25.2",
+    "typedoc-theme-hierarchy": "^4.1.2",
+    "vite-node": "^0.34.6",
+    "vitest": "^0.34.6"
+  }
+}
