@@ -24,6 +24,19 @@ Pre-built docker images are provided on [docker hub](https://hub.docker.com) as 
 
 ## Development
 
+`eve` is a typescript monorepo targeting the `node 18.x` runtime and this repository assumes
+you have [installed nix](https://determinate.systems/posts/determinate-nix-installer).
+
+```shell
+./scripts/bootstrap
+```
+
+Start a `nix` dev shell
+
+```shell
+nix develop -c $SHELL
+```
+
 Install dependencies from `npm`
 
 ```shell
