@@ -19,5 +19,88 @@ services:
       timeout: 20s
       retries: 3
 
+  broker-1:
+    image: evereactor/broker:0.0.1
+    ports:
+      - "8001:8000"
+    environment:
+      - FOO=bar
+    volumes:
+      - broker_1_var_lib:/var/lib/eve/broker
+    depends_on:
+      - minio
+
+  broker-2:
+    image: evereactor/broker:0.0.1
+    ports:
+      - "8002:8000"
+    environment:
+      - FOO=bar
+    volumes:
+      - broker_2_var_lib:/var/lib/eve/broker
+    depends_on:
+      - minio
+
+  broker-3:
+    image: evereactor/broker:0.0.1
+    ports:
+      - "8003:8000"
+    environment:
+      - FOO=bar
+    volumes:
+      - broker_3_var_lib:/var/lib/eve/broker
+    depends_on:
+      - minio
+
+  broker-4:
+    image: evereactor/broker:0.0.1
+    ports:
+      - "8004:8000"
+    environment:
+      - FOO=bar
+    volumes:
+      - broker_4_var_lib:/var/lib/eve/broker
+    depends_on:
+      - minio
+
+  cluster-1:
+    image: evereactor/cluster:0.0.1
+    ports:
+      - "8101:8100"
+    environment:
+      - FOO=bar
+    volumes:
+      - cluster_1_var_lib:/var/lib/eve/broker
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+      - broker-4
+
+  cluster-2:
+    image: evereactor/cluster:0.0.1
+    ports:
+      - "8102:8100"
+    environment:
+      - FOO=bar
+    volumes:
+      - cluster_2_var_lib:/var/lib/eve/broker
+    depends_on:
+      - broker-1
+      - broker-2
+      - broker-3
+      - broker-4
+
+  kafkagateway:
+    image: evereactor/kafka:0.0.1
+    ports:
+      - "9092:9092"
+
 volumes:
   minio_data: {}
+  broker_1_var_lib: {}
+  broker_2_var_lib: {}
+  broker_3_var_lib: {}
+  broker_4_var_lib: {}
+  cluster_1_var_lib: {}
+  cluster_2_var_lib: {}
