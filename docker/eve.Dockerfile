@@ -2,7 +2,7 @@ FROM node:18.18.2-alpine3.17 AS builder
 WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
-COPY tsconfig.json .
+COPY tsconfig.base.json .
 COPY pkgs/package.json ./pkgs/package.json
 COPY pkgs/ucli ./pkgs/ucli
 RUN npm install

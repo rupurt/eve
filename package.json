@@ -1,5 +1,5 @@
 {
-  "name": "@evereactor/eve",
+  "name": "evereactor",
   "version": "0.0.1",
   "description": "reactive event driven applications with bottomless storage",
   "author": "Alex Kwiatkowski",
@@ -14,6 +14,7 @@
     "prettier": "npm run prettier --workspaces",
     "prettier:check": "npm run prettier:check --workspaces",
     "eslint": "npm run eslint --workspaces",
+    "test:workspace": "vitest run",
     "test": "npm run test --workspaces",
     "test:ci": "npm run test:ci --workspaces",
     "coverage": "npm run coverage --workspaces",

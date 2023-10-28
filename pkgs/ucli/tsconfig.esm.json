@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.ts"],
+  "compilerOptions": {
+    "rootDir": "src",
+    "outDir": "esm"
+  },
+  "references": [
+    { "path": "../broker/tsconfig.esm.json" },
+    { "path": "../evectl/tsconfig.esm.json" }
+  ]
+}

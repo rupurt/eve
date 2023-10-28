@@ -1,7 +1,7 @@
-import { configDefaults, defineConfig } from "vitest/config";
+import { configDefaults, defineConfig } from 'vitest/config';
 
 export default defineConfig({
   test: {
-    exclude: [...configDefaults.exclude, "lib/*", "dist/*"],
+    exclude: [...configDefaults.exclude, 'esm/*', 'cjs/*', 'umd/*', 'dist/*'],
   },
 });

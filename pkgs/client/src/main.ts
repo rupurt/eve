@@ -1,1 +1,1 @@
-console.log("@evereactor/client TODO...");
+console.log('@evereactor/client TODO...');
