@@ -1,7 +1,10 @@
 node_modules
-tsconfig.tsbuildinfo
-lib
+*.tsbuildinfo
+esm
+cjs
+umd
 dist
 bin
 rel
 public
+coverage

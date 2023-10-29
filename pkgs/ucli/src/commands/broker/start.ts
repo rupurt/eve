@@ -1,3 +1,3 @@
-import Start from "@eve/broker/lib/commands/start";
+import { Start } from '@evereactor/broker';
 
 export default Start;

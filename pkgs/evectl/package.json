@@ -4,17 +4,23 @@
   "description": "eve command line tool",
   "author": "Alex Kwiatkowski",
   "license": "MIT",
-  "main": "lib/main.js",
+  "main": "./src/main.ts",
+  "types": "./src/main.ts",
   "bin": "dist/index.js",
+  "files": [
+    "./src/**/*",
+    "./esm/**/*",
+    "./cjs/**/*",
+    "./umd/**/*"
+  ],
   "engines": {
     "node": ">=18"
   },
-  "files": [],
   "directories": {
     "doc": "docs"
   },
   "scripts": {
-    "dev": "vite-node src/main.ts",
+    "dev": "tsx src/main.ts",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
     "lint": "npm run prettier:check && npm run eslint",
@@ -23,16 +29,19 @@
     "test": "vitest watch",
     "test:ci": "vitest run",
     "coverage": "vitest run --coverage",
-    "clean": "npm run clean:buildinfo && npm run clean:lib && npm run clean:dist && npm run clean:bin && npm run clean:rel",
-    "clean:buildinfo": "rm -f tsconfig.tsbuildinfo",
-    "clean:lib": "rm -rf lib",
+    "clean": "npm run clean:esm && npm run clean:cjs && npm run clean:umd && npm run clean:dist && npm run clean:bin && npm run clean:rel",
+    "clean:esm": "rm -f tsconfig.esm.tsbuildinfo && rm -rf esm",
+    "clean:cjs": "rm -f tsconfig.cjs.tsbuildinfo && rm -rf cjs",
+    "clean:umd": "rm -f tsconfig.umd.tsbuildinfo && rm -rf umd",
     "clean:dist": "rm -rf dist",
     "clean:bin": "rm -rf bin",
     "clean:rel": "rm -rf rel",
     "typedoc": "typedoc",
-    "build": "npm run build:ts && npm run build:dist && npm run build:exe",
-    "build:ts": "tsc",
-    "build:dist": "esbuild src/main.ts --bundle --platform=node --outfile=dist/index.js",
+    "build": "npm run build:esm && npm run build:cjs && npm run build:umd && npm run build:dist && npm run build:exe",
+    "build:esm": "tsc --build ./tsconfig.esm.json",
+    "build:cjs": "tsc --build ./tsconfig.cjs.json",
+    "build:umd": "tsc --build ./tsconfig.umd.json",
+    "build:dist": "esbuild src/main.ts --bundle --platform=node --tsconfig=tsconfig.cjs.json --outfile=dist/index.js",
     "build:exe": "pkg .",
     "build:sea": "npm run build:sea:blob && npm run build:sea:cpnode && npm run build:sea:postject",
     "build:sea:blob": "node --experimental-sea-config sea-config.json",
@@ -50,20 +59,27 @@
     "zip:mac": "mkdir -p rel && zip rel/evectl-mac-x86.zip bin/evectl-macos -j bin && printf '@ evectl-macos\n@=evectl\n' | zipnote -w rel/evectl-mac-x86.zip",
     "zip:win": "mkdir -p rel && zip rel/evectl-win-x86.zip bin/evectl-win.exe -j bin && printf '@ evectl-win.exe\n@=evectl.exe\n' | zipnote -w rel/evectl-win-x86.zip"
   },
+  "prettier": {
+    "singleQuote": true
+  },
   "pkg": {
-    "scripts": [],
+    "scripts": [
+      "cjs/**/*.js"
+    ],
     "assets": [
       "../../package.json",
       "../package.json",
-      "./package.json",
-      "./node_modules/chalk/**",
-      "./node_modules/supports-color/**",
-      "./node_modules/@isaacs/cliui/**",
-      "./node_modules/wrap-ansi/**",
-      "./node_modules/ts-api-utils/**"
+      "package.json",
+      "node_modules/chalk/**",
+      "node_modules/supports-color/**",
+      "node_modules/@isaacs/cliui/**",
+      "node_modules/wrap-ansi/**",
+      "node_modules/toad-cache/**",
+      "node_modules/ts-api-utils/**"
     ],
     "targets": [
       "node18-linux",
+      "node18-alpine",
       "node18-mac",
       "node18-win"
     ],
@@ -97,7 +113,6 @@
     "tempy": "^3.1.0",
     "typedoc": "^0.25.2",
     "typedoc-theme-hierarchy": "^4.1.2",
-    "vite-node": "^0.34.6",
     "vitest": "^0.34.6"
   }
 }

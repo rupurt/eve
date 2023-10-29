@@ -2,7 +2,7 @@ FROM node:18.11.0-alpine3.16 AS builder
 WORKDIR /app
 COPY package.json .
 COPY package-lock.json .
-COPY tsconfig.json .
+COPY tsconfig.base.json .
 COPY pkgs/package.json ./pkgs/package.json
 COPY pkgs/webui ./pkgs/webui
 RUN npm install

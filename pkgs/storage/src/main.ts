@@ -1,1 +1,1 @@
-console.log("@evereactor/storage TODO...");
+console.log('@evereactor/storage TODO...');

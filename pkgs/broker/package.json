@@ -4,12 +4,19 @@
   "description": "eve broker",
   "author": "Alex Kwiatkowski",
   "license": "MIT",
-  "main": "lib/main.js",
+  "module": "true",
+  "main": "./src/lib.ts",
+  "types": "./src/lib.ts",
   "bin": "dist/index.js",
+  "files": [
+    "./src/**/*",
+    "./esm/**/*",
+    "./cjs/**/*",
+    "./umd/**/*"
+  ],
   "engines": {
     "node": ">=18"
   },
-  "files": [],
   "directories": {
     "doc": "docs"
   },
@@ -23,16 +30,19 @@
     "test": "vitest watch",
     "test:ci": "vitest run",
     "coverage": "vitest run --coverage",
-    "clean": "npm run clean:buildinfo && npm run clean:lib && npm run clean:dist && npm run clean:bin && npm run clean:rel",
-    "clean:buildinfo": "rm -f tsconfig.tsbuildinfo",
-    "clean:lib": "rm -rf lib",
+    "clean": "npm run clean:esm && npm run clean:cjs && npm run clean:umd && npm run clean:dist && npm run clean:bin && npm run clean:rel",
+    "clean:esm": "rm -f tsconfig.esm.tsbuildinfo && rm -rf esm",
+    "clean:cjs": "rm -f tsconfig.cjs.tsbuildinfo && rm -rf cjs",
+    "clean:umd": "rm -f tsconfig.umd.tsbuildinfo && rm -rf umd",
     "clean:dist": "rm -rf dist",
     "clean:bin": "rm -rf bin",
     "clean:rel": "rm -rf rel",
     "typedoc": "typedoc",
-    "build": "npm run build:ts && npm run build:dist && npm run build:exe",
-    "build:ts": "NODE_ENV=production tsc",
-    "build:dist": "NODE_ENV=production esbuild src/main.ts --bundle --platform=node --outfile=dist/index.js",
+    "build": "npm run build:esm && npm run build:cjs && npm run build:umd && npm run build:dist && npm run build:exe",
+    "build:esm": "tsc --build ./tsconfig.esm.json",
+    "build:cjs": "tsc --build ./tsconfig.cjs.json",
+    "build:umd": "tsc --build ./tsconfig.umd.json",
+    "build:dist": "esbuild src/main.ts --bundle --platform=node --tsconfig=tsconfig.cjs.json --outfile=dist/index.js",
     "build:exe": "pkg .",
     "build:sea": "npm run build:sea:blob && npm run build:sea:cpnode && npm run build:sea:postject",
     "build:sea:blob": "node --experimental-sea-config sea-config.json",
@@ -56,7 +66,7 @@
   "oclif": {
     "bin": "broker",
     "dirname": "broker",
-    "commands": "./lib/commands",
+    "commands": "./cjs/commands",
     "plugins": [
       "@oclif/plugin-autocomplete"
     ],
@@ -65,7 +75,7 @@
   },
   "pkg": {
     "scripts": [
-      "lib/**/*.js"
+      "cjs/**/*.js"
     ],
     "assets": [
       "../../package.json",
@@ -75,6 +85,7 @@
       "node_modules/supports-color/**",
       "node_modules/@isaacs/cliui/**",
       "node_modules/wrap-ansi/**",
+      "node_modules/toad-cache/**",
       "node_modules/ts-api-utils/**"
     ],
     "targets": [
@@ -118,7 +129,6 @@
     "tsx": "^3.14.0",
     "typedoc": "^0.25.2",
     "typedoc-theme-hierarchy": "^4.1.2",
-    "vite-node": "^0.34.6",
     "vitest": "^0.34.6"
   }
 }
