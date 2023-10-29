@@ -2,9 +2,22 @@
   "name": "@evereactor/ucli",
   "version": "0.0.1",
   "description": "universal cli single binary",
-  "author": "Alex Kwiatkowski",
+  "keywords": [
+    "reactive",
+    "kappa",
+    "events",
+    "event driven",
+    "data engineering"
+  ],
+  "author": {
+    "name": "Alex Kwiatkowski",
+    "email": "alex+npm@fremantle.io"
+  },
   "license": "MIT",
-  "module": "true",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rupurt/eve/tree/main/pkgs/ucli"
+  },
   "main": "./src/main.ts",
   "types": "./src/main.ts",
   "bin": "dist/index.js",

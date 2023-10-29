@@ -2,7 +2,22 @@
   "name": "evereactor",
   "version": "0.0.1",
   "description": "reactive event driven applications with bottomless storage",
-  "author": "Alex Kwiatkowski",
+  "keywords": [
+    "reactive",
+    "kappa",
+    "events",
+    "event driven",
+    "data engineering"
+  ],
+  "author": {
+    "name": "Alex Kwiatkowski",
+    "email": "alex+npm@fremantle.io"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rupurt/eve"
+  },
   "workspaces": [
     "pkgs/*"
   ],

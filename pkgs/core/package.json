@@ -2,9 +2,24 @@
   "name": "@evereactor/core",
   "version": "0.0.1",
   "description": "core event streaming library",
-  "author": "Alex Kwiatkowski",
+  "keywords": [
+    "reactive",
+    "kappa",
+    "events",
+    "event driven",
+    "data engineering"
+  ],
+  "author": {
+    "name": "Alex Kwiatkowski",
+    "email": "alex+npm@fremantle.io"
+  },
   "license": "MIT",
-  "main": "lib/main.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rupurt/eve/tree/main/pkgs/core"
+  },
+  "main": "./src/lib.ts",
+  "types": "./src/lib.ts",
   "engines": {
     "node": ">=18"
   },

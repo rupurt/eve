@@ -2,8 +2,22 @@
   "name": "@evereactor/evectl",
   "version": "0.0.1",
   "description": "eve command line tool",
-  "author": "Alex Kwiatkowski",
+  "keywords": [
+    "reactive",
+    "kappa",
+    "events",
+    "event driven",
+    "data engineering"
+  ],
+  "author": {
+    "name": "Alex Kwiatkowski",
+    "email": "alex+npm@fremantle.io"
+  },
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rupurt/eve/tree/main/pkgs/evectl"
+  },
   "main": "./src/main.ts",
   "types": "./src/main.ts",
   "bin": "dist/index.js",

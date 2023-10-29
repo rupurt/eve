@@ -2,8 +2,24 @@
   "name": "@evereactor/kafka",
   "version": "0.0.1",
   "description": "kafka API compatibility",
-  "author": "Alex Kwiatkowski",
-  "main": "lib/main.js",
+  "keywords": [
+    "reactive",
+    "kappa",
+    "events",
+    "event driven",
+    "data engineering"
+  ],
+  "author": {
+    "name": "Alex Kwiatkowski",
+    "email": "alex+npm@fremantle.io"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rupurt/eve/tree/main/pkgs/kafka"
+  },
+  "main": "./src/lib.ts",
+  "types": "./src/lib.ts",
   "bin": "dist/index.js",
   "engines": {
     "node": ">=18"
