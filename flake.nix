@@ -32,7 +32,7 @@
         name = "default dev shell";
         packages = with pkgs; [
           bats
-          nodejs_20
+          nodejs_21
         ];
       };
     });
