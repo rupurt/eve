@@ -53,7 +53,12 @@
     "build:esm": "tsc --build ./tsconfig.esm.json",
     "build:cjs": "tsc --build ./tsconfig.cjs.json",
     "build:umd": "tsc --build ./tsconfig.umd.json",
-    "prepublishOnly": "npm run clean && npm run build"
+    "prepublishOnly": "npm run clean && npm run build",
+    "examples": "npm run examples:ts && npm run examples:esm && npm run examples:cjs && npm run examples:umd",
+    "examples:ts": "tsx examples/ts/main.ts",
+    "examples:esm": "node --experimental-detect-module examples/esm/main.mjs",
+    "examples:cjs": "node examples/cjs/main.cjs",
+    "examples:umd": "node examples/umd/main.js"
   },
   "prettier": {
     "singleQuote": true
