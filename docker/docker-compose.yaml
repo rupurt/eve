@@ -19,6 +19,62 @@ services:
       timeout: 20s
       retries: 3
 
+  # minio_setup:
+  #   image: minio/mc:RELEASE.2021-11-05T10-05-06Z
+  #   depends_on:
+  #     - minio
+  #   links:
+  #     - minio
+  #   volumes:
+  #     - ${PWD}/data:/duckdb/data
+  #   entrypoint: >
+  #     /bin/sh -c "
+  #       while true; do
+  #         /usr/bin/mc config host add myminio http://duckdb-minio.com:9000 duckdb_minio_admin duckdb_minio_admin_password
+  #         if [ $$? -eq 0 ]; then
+  #           break
+  #         fi
+  #         echo 'Failed to add host alias, trying again in a second'
+  #         sleep 1
+  #       done
+  #       /usr/bin/mc admin user add myminio minio_duckdb_user minio_duckdb_user_password
+  #       /usr/bin/mc admin user list myminio
+  #       /usr/bin/mc admin user info myminio minio_duckdb_user
+  #       /usr/bin/mc admin policy set myminio readwrite user=minio_duckdb_user
+  #
+  #       /usr/bin/mc admin user add myminio minio_duckdb_user_2 minio_duckdb_user_2_password
+  #       /usr/bin/mc admin user list myminio
+  #       /usr/bin/mc admin user info myminio minio_duckdb_user_2
+  #       /usr/bin/mc admin policy set myminio readwrite user=minio_duckdb_user_2
+  #
+  #       /usr/bin/mc rb --force myminio/test-bucket
+  #       /usr/bin/mc mb myminio/test-bucket
+  #       /usr/bin/mc policy get myminio/test-bucket
+  #
+  #       /usr/bin/mc rb --force myminio/test-bucket_2
+  #       /usr/bin/mc mb myminio/test-bucket_2
+  #       /usr/bin/mc policy get myminio/test-bucket_2
+  #
+  #       /usr/bin/mc rb --force myminio/test-bucket-public
+  #       /usr/bin/mc mb myminio/test-bucket-public
+  #       /usr/bin/mc policy set download myminio/test-bucket-public
+  #       /usr/bin/mc policy get myminio/test-bucket-public
+  #
+  #       # This is for the test of presigned URLs
+  #       # small file upload
+  #       /usr/bin/mc cp /duckdb/data/csv/phonenumbers.csv myminio/test-bucket/presigned/phonenumbers.csv
+  #       /usr/bin/mc cp /duckdb/data/parquet-testing/glob/t1.parquet myminio/test-bucket/presigned/t1.parquet
+  #
+  #       # large file upload
+  #       /usr/bin/mc cp /duckdb/data/parquet-testing/presigned/presigned-url-lineitem.parquet myminio/test-bucket/presigned/lineitem_large.parquet
+  #
+  #       /usr/bin/mc share download myminio/test-bucket/presigned/phonenumbers.csv
+  #       /usr/bin/mc share download myminio/test-bucket/presigned/t1.parquet
+  #       /usr/bin/mc share download myminio/test-bucket/presigned/lineitem_large.parquet
+  #
+  #       exit 0;
+  #     "
+
   broker-1:
     image: evereactor/broker:0.0.1
     ports:
