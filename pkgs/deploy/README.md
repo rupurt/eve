@@ -1,0 +1,23 @@
+# @evereactor/deploy
+
+Deploy eve applications
+
+```shell
+$ deploy
+eve deploy
+
+VERSION
+  @evereactor/deploy/0.0.1 linux-x64 node-v18.5.0
+
+USAGE
+  $ deploy [COMMAND]
+
+COMMANDS
+  autocomplete      TODO...
+  docker            TODO...
+  docker-compose    TODO...
+  k8s               TODO...
+  gcp               TODO...
+  aws               TODO...
+  azure             TODO...
+```
