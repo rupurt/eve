@@ -1,3 +1,6 @@
 node_modules
-.eve
 eve.yaml
+eve.config.ts
+eve.config.js
+.eve
+.local

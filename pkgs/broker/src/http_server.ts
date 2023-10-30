@@ -15,7 +15,7 @@ class HTTPServer {
     this._options = options;
     this._httpServer = Fastify({});
 
-    const opts: RouteShorthandOptions = {
+    const pingOpts: RouteShorthandOptions = {
       schema: {
         response: {
           200: {
@@ -30,9 +30,101 @@ class HTTPServer {
       },
     };
 
-    this._httpServer.get('/ping', opts, async (request, reply) => {
+    this._httpServer.get('/ping', pingOpts, async (request, reply) => {
       return { pong: 'it worked!' };
     });
+
+    const getTopicsOpts: RouteShorthandOptions = {
+      schema: {
+        response: {
+          200: {
+            type: 'object',
+            properties: {
+              msg: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    this._httpServer.get(
+      '/api/v1/topics',
+      getTopicsOpts,
+      async (request, reply) => {
+        return { msg: 'GET /api/v1/topics' };
+      },
+    );
+
+    const postTopicsOpts: RouteShorthandOptions = {
+      schema: {
+        response: {
+          200: {
+            type: 'object',
+            properties: {
+              msg: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    this._httpServer.post(
+      '/api/v1/topics',
+      postTopicsOpts,
+      async (request, reply) => {
+        return { msg: 'POST /api/v1/topics' };
+      },
+    );
+
+    const getRecordsOpts: RouteShorthandOptions = {
+      schema: {
+        response: {
+          200: {
+            type: 'object',
+            properties: {
+              msg: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    this._httpServer.get(
+      '/api/v1/records',
+      getRecordsOpts,
+      async (request, reply) => {
+        return { msg: 'GET api/v1/records' };
+      },
+    );
+
+    const postRecordsOpts: RouteShorthandOptions = {
+      schema: {
+        response: {
+          200: {
+            type: 'object',
+            properties: {
+              msg: {
+                type: 'string',
+              },
+            },
+          },
+        },
+      },
+    };
+
+    this._httpServer.post(
+      '/api/v1/records',
+      postRecordsOpts,
+      async (request, reply) => {
+        return { msg: 'POST /api/v1/records' };
+      },
+    );
   }
 
   async listen() {

@@ -8,11 +8,13 @@ Reactive event driven applications with bottomless storage
 | --------------------------------------------------- | ------------------------------------------------- |
 | [@evereactor/broker](./pkgs/broker)                 | Broker for event streaming                        |
 | [@evereactor/client](./pkgs/client)                 | Typescript client SDK                             |
+| [@evereactor/clock](./pkgs/clock)                   | Deterministic relative time clock                 |
 | [@evereactor/cluster](./pkgs/cluster)               | Distributed event streaming cluster               |
 | [@evereactor/core](./pkgs/core)                     | Core event streaming library                      |
 | [@evereactor/evectl](./pkgs/evectl)                 | Eve command line tool                             |
 | [@evereactor/kafka](./pkgs/kafka)                   | Kafka API compatibility                           |
 | [@evereactor/protocol](./pkgs/protocol)             | Eve protocol library                              |
+| [@evereactor/reactor](./pkgs/reactor)               | Reactive event loop for timers and events         |
 | [@evereactor/storage](./pkgs/storage)               | Storage abstraction for event message structure   |
 | [@evereactor/ucli](./pkgs/ucli)                     | Universal CLI single binary                       |
 | [@evereactor/webui](./pkgs/webui)                   | Web management UI                                 |

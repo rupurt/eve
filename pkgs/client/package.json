@@ -27,6 +27,9 @@
     "build": "npm run build:ts",
     "build:ts": "tsc"
   },
+  "prettier": {
+    "singleQuote": true
+  },
   "dependencies": {
     "verror": "^1.10.1"
   },

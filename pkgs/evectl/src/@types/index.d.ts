@@ -1,1 +1,1 @@
-declare module "yamlify-object-colors";
+declare module 'yamlify-object-colors';
