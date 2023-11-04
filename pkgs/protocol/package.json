@@ -20,6 +20,12 @@
   },
   "main": "./src/lib.ts",
   "types": "./src/lib.ts",
+  "files": [
+    "./src/**/*",
+    "./esm/**/*",
+    "./cjs/**/*",
+    "./umd/**/*"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -27,59 +33,38 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "tsx src/main.ts",
+    "dev": "bun run src/lib.ts",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
     "lint": "npm run prettier:check && npm run eslint",
     "eslint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "vitest watch",
-    "test:ci": "vitest run",
-    "coverage": "vitest run --coverage",
-    "clean": "npm run clean:buildinfo && npm run clean:lib",
-    "clean:buildinfo": "rm -f tsconfig.tsbuildinfo",
-    "clean:lib": "rm -rf lib",
+    "test": "bun test",
+    "coverage": "bun test --coverage",
+    "clean": "npm run clean:esm && npm run clean:cjs && npm run clean:umd",
+    "clean:esm": "rm -f tsconfig.esm.tsbuildinfo && rm -rf esm",
+    "clean:cjs": "rm -f tsconfig.cjs.tsbuildinfo && rm -rf cjs",
+    "clean:umd": "rm -f tsconfig.umd.tsbuildinfo && rm -rf umd",
     "typedoc": "typedoc",
-    "build": "npm run build:ts",
-    "build:ts": "NODE_ENV=production tsc"
+    "build": "npm run build:esm && npm run build:cjs && npm run build:umd",
+    "build:esm": "tsc --build ./tsconfig.esm.json",
+    "build:cjs": "tsc --build ./tsconfig.cjs.json",
+    "build:umd": "tsc --build ./tsconfig.umd.json",
+    "prepublishOnly": "npm run clean && npm run build",
+    "examples": "npm run examples:ts && npm run examples:esm && npm run examples:cjs && npm run examples:umd",
+    "examples:ts": "bun run examples/ts/main.ts",
+    "examples:esm": "node --experimental-detect-module examples/esm/main.mjs",
+    "examples:cjs": "node examples/cjs/main.cjs",
+    "examples:umd": "node examples/umd/main.js"
   },
   "prettier": {
     "singleQuote": true
   },
-  "dependencies": {
-    "@oclif/core": "^3.5.0",
-    "@oclif/plugin-autocomplete": "^2.3.10",
-    "@tweedegolf/storage-abstraction": "^1.4.6",
-    "@typescript-eslint/eslint-plugin": "^6.7.5",
-    "@typescript-eslint/parser": "^6.7.5",
-    "convict": "^6.2.4",
-    "convict-format-with-validator": "^6.2.0",
-    "fastify": "^4.24.3",
-    "pino": "^8.16.1",
-    "suppress-experimental-warnings": "^1.1.17",
-    "verror": "^1.10.1",
-    "yaml": "^2.3.2",
-    "yamlify-object": "^1.0.0",
-    "yamlify-object-colors": "^1.0.3"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "@oclif/prettier-config": "^0.2.1",
-    "@oclif/test": "^3.0.2",
-    "@types/convict": "^6.1.5",
-    "@types/prompts": "^2.4.5",
-    "@types/verror": "^1.10.7",
-    "@vitest/coverage-v8": "^0.34.6",
     "eslint": "^8.51.0",
-    "eslint-config-oclif": "^5.0.0",
-    "eslint-config-oclif-typescript": "^3.0.6",
-    "fastify-cli": "^5.8.0",
-    "pkg": "^5.8.1",
     "prettier": "^3.0.3",
-    "tempy": "^3.1.0",
-    "tsx": "^3.14.0",
     "typedoc": "^0.25.2",
-    "typedoc-theme-hierarchy": "^4.1.2",
-    "vite-node": "^0.34.6",
-    "vitest": "^0.34.6"
+    "typedoc-theme-hierarchy": "^4.1.2"
   }
 }

@@ -32,6 +32,7 @@
         name = "default dev shell";
         packages = with pkgs; [
           bats
+          bun
           nodejs_21
         ];
       };

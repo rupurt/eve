@@ -14,7 +14,9 @@
     "esModuleInterop": true,
     // "allowSyntheticDefaultImports": true,
     // "isolatedModules": true,
+    // "resolveJsonModule": true,
     "skipLibCheck": true,
-    "forceConsistentCasingInFileNames": true
+    "forceConsistentCasingInFileNames": true,
+    "types": ["bun-types"]
   }
 }

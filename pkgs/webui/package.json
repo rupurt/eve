@@ -20,7 +20,10 @@
   },
   "main": "./src/lib.ts",
   "types": "./src/lib.ts",
-  "bin": "dist/index.js",
+  "exports": {
+    ".": "./src/lib.ts",
+    "./esm": "./esm/lib.js"
+  },
   "engines": {
     "node": ">=18"
   },
@@ -29,41 +32,36 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "tsx src/main.ts",
+    "dev": "bun run src/main.ts",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
     "lint": "npm run prettier:check && npm run eslint",
     "eslint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "vitest watch",
-    "test:ci": "vitest run",
-    "coverage": "vitest run --coverage",
-    "clean": "npm run clean:buildinfo && npm run clean:lib && npm run clean:dist && npm run clean:bin && npm run clean:rel",
-    "clean:buildinfo": "rm -f tsconfig.tsbuildinfo",
-    "clean:lib": "rm -rf lib",
-    "clean:dist": "rm -rf dist",
+    "test": "bun test",
+    "coverage": "bun test --coverage",
+    "clean": "npm run clean:esm && npm run clean:bin && npm run clean:rel",
+    "clean:esm": "rm -f src/tsconfig.esm.tsbuildinfo && rm -rf esm",
     "clean:bin": "rm -rf bin",
     "clean:rel": "rm -rf rel",
     "typedoc": "typedoc",
-    "build": "npm run build:ts && npm run build:dist && npm run build:exe",
-    "build:ts": "NODE_ENV=production tsc",
-    "build:dist": "NODE_ENV=production esbuild src/main.ts --bundle --platform=node --outfile=dist/index.js",
-    "build:exe": "pkg .",
-    "build:sea": "npm run build:sea:blob && npm run build:sea:cpnode && npm run build:sea:postject",
-    "build:sea:blob": "node --experimental-sea-config sea-config.json",
-    "build:sea:cpnode": "cp $(command -v node) bin/webui-linux && chmod +w bin/webui-linux",
-    "build:sea:postject": "npx postject bin/webui-linux NODE_SEA_BLOB bin/sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2 && chmod -w bin/webui-linux",
+    "build": "npm run build:esm && npm run build:exe",
+    "build:esm": "tsc --build ./src/tsconfig.esm.json",
+    "build:exe": "npm run build:exe:linux && npm run build:exe:mac",
+    "build:exe:linux": "npm run build:exe:linux:x86_64 && npm run build:exe:linux:aarch64",
+    "build:exe:linux:x86_64": "bun build src/main.ts --compile --target bun --outfile bin/webui-linux-x86_64",
+    "build:exe:linux:aarch64": "bun build src/main.ts --compile --target bun --outfile bin/webui-linux-aarch64",
+    "build:exe:mac": "npm run build:exe:mac:x86_64 && npm run build:exe:mac:aarch64",
+    "build:exe:mac:x86_64": "bun build src/main.ts --compile --target bun --outfile bin/webui-mac-x86_64",
+    "build:exe:mac:aarch64": "bun build src/main.ts --compile --target bun --outfile bin/webui-mac-aarch64",
     "release": "npm run tar && npm run zip",
-    "tar": "npm run tar:linux && npm run tar:alpine && npm run tar:mac && npm run tar:win",
+    "tar": "npm run tar:linux && npm run tar:mac",
     "tar:linux": "mkdir -p rel && tar -C bin --transform 'flags=r;s|webui-linux|webui|' -czvf rel/webui-linux-x86.tar.gz webui-linux",
-    "tar:alpine": "mkdir -p rel && tar -C bin --transform 'flags=r;s|webui-alpine|webui|' -czvf rel/webui-alpine-x86.tar.gz webui-alpine",
     "tar:mac": "mkdir -p rel && tar -C bin --transform 'flags=r;s|webui-macos|webui|' -czvf rel/webui-mac-x86.tar.gz webui-macos",
-    "tar:win": "mkdir -p rel && tar -C bin --transform 'flags=r;s|webui-win|webui|' -czvf rel/webui-win-x86.tar.gz webui-win.exe",
-    "zip": "npm run zip:linux && npm run zip:alpine && npm run zip:mac && npm run zip:win",
+    "zip": "npm run zip:linux && npm run zip:mac",
     "zip:linux": "mkdir -p rel && zip rel/webui-linux-x86.zip bin/webui-linux -j bin && printf '@ webui-linux\n@=webui\n' | zipnote -w rel/webui-linux-x86.zip",
-    "zip:alpine": "mkdir -p rel && zip rel/webui-alpine-x86.zip bin/webui-alpine -j bin && printf '@ webui-alpine\n@=webui\n' | zipnote -w rel/webui-alpine-x86.zip",
     "zip:mac": "mkdir -p rel && zip rel/webui-mac-x86.zip bin/webui-macos -j bin && printf '@ webui-macos\n@=webui\n' | zipnote -w rel/webui-mac-x86.zip",
-    "zip:win": "mkdir -p rel && zip rel/webui-win-x86.zip bin/webui-win.exe -j bin && printf '@ webui-win.exe\n@=webui.exe\n' | zipnote -w rel/webui-win-x86.zip"
+    "prepublishOnly": "npm run clean && npm run build"
   },
   "prettier": {
     "singleQuote": true
@@ -78,32 +76,9 @@
     "topicSeparator": " ",
     "topics": {}
   },
-  "pkg": {
-    "scripts": [
-      "lib/**/*.js"
-    ],
-    "assets": [
-      "../../package.json",
-      "../package.json",
-      "package.json",
-      "node_modules/chalk/**",
-      "node_modules/supports-color/**",
-      "node_modules/@isaacs/cliui/**",
-      "node_modules/wrap-ansi/**",
-      "node_modules/ts-api-utils/**"
-    ],
-    "targets": [
-      "node18-linux",
-      "node18-alpine",
-      "node18-mac",
-      "node18-win"
-    ],
-    "outputPath": "bin"
-  },
   "dependencies": {
     "@oclif/core": "^3.5.0",
     "@oclif/plugin-autocomplete": "^2.3.10",
-    "@tweedegolf/storage-abstraction": "^1.4.6",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "convict": "^6.2.4",
@@ -121,18 +96,12 @@
     "@types/convict": "^6.1.5",
     "@types/prompts": "^2.4.5",
     "@types/verror": "^1.10.7",
-    "@vitest/coverage-v8": "^0.34.6",
     "eslint": "^8.51.0",
     "eslint-config-oclif": "^5.0.0",
     "eslint-config-oclif-typescript": "^3.0.6",
     "fastify-cli": "^5.8.0",
-    "pkg": "^5.8.1",
     "prettier": "^3.0.3",
-    "tempy": "^3.1.0",
-    "tsx": "^3.14.0",
     "typedoc": "^0.25.2",
-    "typedoc-theme-hierarchy": "^4.1.2",
-    "vite-node": "^0.34.6",
-    "vitest": "^0.34.6"
+    "typedoc-theme-hierarchy": "^4.1.2"
   }
 }

@@ -1,0 +1,88 @@
+{
+  "name": "@evereactor/workflow",
+  "version": "0.0.1",
+  "description": "TODO...",
+  "keywords": [
+    "workflow",
+    "workflows",
+    "durable",
+    "durable execution",
+    "reactive",
+    "kappa",
+    "events",
+    "event driven",
+    "data engineering"
+  ],
+  "author": {
+    "name": "Alex Kwiatkowski",
+    "email": "alex+npm@fremantle.io"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rupurt/eve/tree/main/pkgs/workflow"
+  },
+  "main": "./src/lib.ts",
+  "types": "./src/lib.ts",
+  "files": [
+    "./src/**/*",
+    "./esm/**/*",
+    "./cjs/**/*",
+    "./umd/**/*"
+  ],
+  "exports": {
+    ".": "./src/lib.ts",
+    "./esm": "./esm/lib.js",
+    "./cjs": "./cjs/lib.js",
+    "./umd": "./umd/lib.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "bun run src/lib.ts",
+    "prettier": "prettier . --write",
+    "prettier:check": "prettier . --check",
+    "lint": "npm run prettier:check && npm run eslint",
+    "eslint": "eslint",
+    "typecheck": "npm run test:types",
+    "coverage": "npm run test:coverage",
+    "test": "npm run test:types && npm run test:bun",
+    "test:types": "tsc --noEmit --project tsconfig.esm.json",
+    "test:bun": "bun test",
+    "test:coverage": "bun test --coverage",
+    "clean": "npm run clean:esm && npm run clean:cjs && npm run clean:umd",
+    "clean:esm": "rm -f tsconfig.esm.tsbuildinfo && rm -rf esm",
+    "clean:cjs": "rm -f tsconfig.cjs.tsbuildinfo && rm -rf cjs",
+    "clean:umd": "rm -f tsconfig.umd.tsbuildinfo && rm -rf umd",
+    "typedoc": "typedoc",
+    "build": "npm run build:esm && npm run build:cjs && npm run build:umd",
+    "build:esm": "tsc --build ./tsconfig.esm.json",
+    "build:cjs": "tsc --build ./tsconfig.cjs.json",
+    "build:umd": "tsc --build ./tsconfig.umd.json",
+    "prepublishOnly": "npm run clean && npm run build",
+    "examples": "npm run examples:ts && npm run examples:esm && npm run examples:cjs && npm run examples:umd",
+    "examples:ts": "bun run examples/ts/main.ts",
+    "examples:esm": "node --experimental-detect-module examples/esm/main.mjs",
+    "examples:cjs": "node examples/cjs/main.cjs",
+    "examples:umd": "node examples/umd/main.js"
+  },
+  "prettier": {
+    "singleQuote": true
+  },
+  "dependencies": {
+    "@evereactor/client": "^0.0.1",
+    "pino": "^8.16.1",
+    "verror": "^1.10.1"
+  },
+  "devDependencies": {
+    "@types/verror": "^1.10.7",
+    "eslint": "^8.51.0",
+    "prettier": "^3.0.3",
+    "typedoc": "^0.25.2",
+    "typedoc-theme-hierarchy": "^4.1.2"
+  }
+}

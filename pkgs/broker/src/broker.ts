@@ -1,18 +1,21 @@
-import { HTTPServer, HTTPServerOptions } from './http_server';
+import { Logger } from './logger.js';
+import { HTTPServer, HTTPServerOptions } from './http-server.js';
 
 /**
  * Broker options
  */
 type BrokerOptions = {
   http: HTTPServerOptions;
+  logger?: ReturnType<typeof Logger>;
 };
 
 /**
  * The `Broker` class is the main entry point for the broker.
  */
 class Broker {
-  private _options: BrokerOptions;
+  private _opts: BrokerOptions;
   private _httpServer: HTTPServer;
+  private _logger: ReturnType<typeof Logger>;
 
   /**
    * Create a new `Broker` instance
@@ -21,12 +24,13 @@ class Broker {
    * const broker = new Broker({ http: { host: '::', port: 8080 } });
    * ```
    *
-   * @param options - broker options
+   * @param opts - broker options
    * @returns a new `Broker` instance
    */
-  constructor(options: BrokerOptions) {
-    this._options = options;
-    this._httpServer = new HTTPServer(this._options.http);
+  constructor(opts: BrokerOptions) {
+    this._opts = opts;
+    this._httpServer = new HTTPServer(this._opts.http);
+    this._logger = opts?.logger || Logger({});
   }
 
   /**
@@ -40,6 +44,13 @@ class Broker {
    */
   listen(): Promise<void> {
     return this._httpServer.listen();
+  }
+
+  /**
+   * Close the http server
+   */
+  async close() {
+    return this._httpServer.close();
   }
 }
 

@@ -25,18 +25,6 @@ services:
       context: .
       dockerfile: docker/broker.Dockerfile
 
-  cluster-1:
-    image: evereactor/cluster:latest
-    build:
-      context: .
-      dockerfile: docker/cluster.Dockerfile
-
-  cluster-2:
-    image: evereactor/cluster:latest
-    build:
-      context: .
-      dockerfile: docker/cluster.Dockerfile
-
   kafkagateway:
     image: evereactor/kafka:latest
     build:

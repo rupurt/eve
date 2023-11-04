@@ -29,19 +29,18 @@
     "prettier": "npm run prettier --workspaces",
     "prettier:check": "npm run prettier:check --workspaces",
     "eslint": "npm run eslint --workspaces",
-    "test:workspace": "vitest run",
     "test": "npm run test --workspaces",
-    "test:ci": "npm run test:ci --workspaces",
     "coverage": "npm run coverage --workspaces",
     "typedoc": "npm run typedoc --workspaces",
     "clean": "npm run clean --if-present --workspaces",
     "build": "npm run build --if-present --workspaces",
-    "release": "npm run release --if-present --workspaces"
+    "release": "npm run release --if-present --workspaces",
+    "examples": "npm run examples --if-present --workspaces"
   },
-  "dependencies": {},
   "devDependencies": {
     "@types/node": "^20.8.7",
-    "typescript": "^5.2.2",
-    "tslib": "^2.6.2"
+    "bun-types": "^1.0.8",
+    "tslib": "^2.6.2",
+    "typescript": "^5.2.2"
   }
 }

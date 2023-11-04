@@ -1,6 +1,8 @@
 node_modules
-tsconfig.tsbuildinfo
-lib
-rel
+*.tsbuildinfo
+cjs
+esm
+umd
 public
 coverage
+.examples

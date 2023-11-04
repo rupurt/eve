@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.ts"],
+  "compilerOptions": {
+    "module": "commonjs",
+    "rootDir": "src",
+    "outDir": "cjs"
+  },
+  "references": [
+    {
+      "path": "../protocol/tsconfig.cjs.json"
+    }
+  ]
+}

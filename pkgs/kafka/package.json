@@ -3,6 +3,10 @@
   "version": "0.0.1",
   "description": "kafka API compatibility",
   "keywords": [
+    "kafka",
+    "kafka api",
+    "kafka protocol",
+    "kafka gateway",
     "reactive",
     "kappa",
     "events",
@@ -18,9 +22,14 @@
     "type": "git",
     "url": "https://github.com/rupurt/eve/tree/main/pkgs/kafka"
   },
-  "main": "./src/lib.ts",
-  "types": "./src/lib.ts",
-  "bin": "dist/index.js",
+  "main": "./src/main.ts",
+  "types": "./src/main.ts",
+  "files": [
+    "./src/**/*",
+    "./esm/**/*",
+    "./cjs/**/*",
+    "./umd/**/*"
+  ],
   "engines": {
     "node": ">=18"
   },
@@ -28,81 +37,45 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "tsx src/main.ts",
+    "dev": "bun run src/main.ts",
     "prettier": "prettier . --write",
     "prettier:check": "prettier . --check",
     "lint": "npm run prettier:check && npm run eslint",
     "eslint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "vitest watch",
-    "test:ci": "vitest run",
-    "coverage": "vitest run --coverage",
-    "clean": "npm run clean:lib && npm run clean:dist && npm run clean:bin",
-    "clean:lib": "rm -rf lib",
-    "clean:dist": "rm -rf dist",
+    "test": "bun test",
+    "coverage": "bun test --coverage",
+    "clean": "npm run clean:esm && npm run clean:cjs && npm run clean:umd && npm run clean:bin && npm run clean:rel",
+    "clean:esm": "rm -f tsconfig.esm.tsbuildinfo && rm -rf esm",
+    "clean:cjs": "rm -f tsconfig.cjs.tsbuildinfo && rm -rf cjs",
+    "clean:umd": "rm -f tsconfig.umd.tsbuildinfo && rm -rf umd",
     "clean:bin": "rm -rf bin",
+    "clean:rel": "rm -rf rel",
     "typedoc": "typedoc",
-    "build": "npm run build:ts && npm run build:dist && npm run build:exe",
-    "build:ts": "NODE_ENV=production tsc",
-    "build:dist": "NODE_ENV=production esbuild src/main.ts --bundle --platform=node --outfile=dist/index.js",
-    "build:exe": "pkg .",
-    "build:sea": "npm run build:sea:blob && npm run build:sea:cpnode && npm run build:sea:postject",
-    "build:sea:blob": "node --experimental-sea-config sea-config.json",
-    "build:sea:cpnode": "cp $(command -v node) bin/kafka-linux && chmod +w bin/kafka-linux",
-    "build:sea:postject": "npx postject bin/kafka-linux NODE_SEA_BLOB bin/sea-prep.blob --sentinel-fuse NODE_SEA_FUSE_fce680ab2cc467b6e072b8b5df1996b2 && chmod -w bin/kafka-linux",
+    "build": "npm run build:esm && npm run build:cjs && npm run build:umd && npm run build:exe",
+    "build:esm": "tsc --build ./tsconfig.esm.json",
+    "build:cjs": "tsc --build ./tsconfig.cjs.json",
+    "build:umd": "tsc --build ./tsconfig.umd.json",
+    "build:exe": "npm run build:exe:linux && npm run build:exe:mac",
+    "build:exe:linux": "npm run build:exe:linux:x86_64 && npm run build:exe:linux:aarch64",
+    "build:exe:linux:x86_64": "bun build src/main.ts --compile --target bun --outfile bin/kafka-linux-x86_64",
+    "build:exe:linux:aarch64": "bun build src/main.ts --compile --target bun --outfile bin/kafka-linux-aarch64",
+    "build:exe:mac": "npm run build:exe:mac:x86_64 && npm run build:exe:mac:aarch64",
+    "build:exe:mac:x86_64": "bun build src/main.ts --compile --target bun --outfile bin/kafka-mac-x86_64",
+    "build:exe:mac:aarch64": "bun build src/main.ts --compile --target bun --outfile bin/kafka-mac-aarch64",
     "release": "npm run tar && npm run zip",
-    "tar": "npm run tar:linux && npm run tar:alpine && npm run tar:mac && npm run tar:win",
+    "tar": "npm run tar:linux && npm run tar:mac",
     "tar:linux": "mkdir -p rel && tar -C bin --transform 'flags=r;s|kafka-linux|kafka|' -czvf rel/kafka-linux-x86.tar.gz kafka-linux",
-    "tar:alpine": "mkdir -p rel && tar -C bin --transform 'flags=r;s|kafka-alpine|kafka|' -czvf rel/kafka-alpine-x86.tar.gz kafka-alpine",
     "tar:mac": "mkdir -p rel && tar -C bin --transform 'flags=r;s|kafka-macos|kafka|' -czvf rel/kafka-mac-x86.tar.gz kafka-macos",
-    "tar:win": "mkdir -p rel && tar -C bin --transform 'flags=r;s|kafka-win|kafka|' -czvf rel/kafka-win-x86.tar.gz kafka-win.exe",
-    "zip": "npm run zip:linux && npm run zip:alpine && npm run zip:mac && npm run zip:win",
+    "zip": "npm run zip:linux && npm run zip:mac",
     "zip:linux": "mkdir -p rel && zip rel/kafka-linux-x86.zip bin/kafka-linux -j bin && printf '@ kafka-linux\n@=kafka\n' | zipnote -w rel/kafka-linux-x86.zip",
-    "zip:alpine": "mkdir -p rel && zip rel/kafka-alpine-x86.zip bin/kafka-alpine -j bin && printf '@ kafka-alpine\n@=kafka\n' | zipnote -w rel/kafka-alpine-x86.zip",
-    "zip:mac": "mkdir -p rel && zip rel/kafka-mac-x86.zip bin/kafka-macos -j bin && printf '@ kafka-macos\n@=kafka\n' | zipnote -w rel/kafka-mac-x86.zip",
-    "zip:win": "mkdir -p rel && zip rel/kafka-win-x86.zip bin/kafka-win.exe -j bin && printf '@ kafka-win.exe\n@=kafka.exe\n' | zipnote -w rel/kafka-win-x86.zip"
+    "zip:mac": "mkdir -p rel && zip rel/kafka-mac-x86.zip bin/kafka-macos -j bin && printf '@ kafka-macos\n@=kafka\n' | zipnote -w rel/kafka-mac-x86.zip"
   },
   "prettier": {
     "singleQuote": true
   },
-  "oclif": {
-    "bin": "kafka",
-    "dirname": "kafka",
-    "commands": "./lib/commands",
-    "plugins": [
-      "@oclif/plugin-autocomplete"
-    ],
-    "topicSeparator": " ",
-    "topics": {}
-  },
-  "pkg": {
-    "scripts": [
-      "lib/**/*.js"
-    ],
-    "assets": [
-      "../../package.json",
-      "../package.json",
-      "package.json",
-      "node_modules/chalk/**",
-      "node_modules/supports-color/**",
-      "node_modules/@isaacs/cliui/**",
-      "node_modules/wrap-ansi/**",
-      "node_modules/ts-api-utils/**"
-    ],
-    "targets": [
-      "node18-linux",
-      "node18-alpine",
-      "node18-mac",
-      "node18-win"
-    ],
-    "outputPath": "bin"
-  },
   "dependencies": {
-    "@oclif/core": "^3.5.0",
-    "@oclif/plugin-autocomplete": "^2.3.10",
-    "@tweedegolf/storage-abstraction": "^1.4.6",
-    "@typescript-eslint/eslint-plugin": "^6.7.5",
-    "@typescript-eslint/parser": "^6.7.5",
+    "clipanion": "^4.0.0-rc.2",
     "convict": "^6.2.4",
     "convict-format-with-validator": "^6.2.0",
     "fastify": "^4.24.3",
@@ -119,18 +92,14 @@
     "@types/convict": "^6.1.5",
     "@types/prompts": "^2.4.5",
     "@types/verror": "^1.10.7",
-    "@vitest/coverage-v8": "^0.34.6",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
     "eslint": "^8.51.0",
     "eslint-config-oclif": "^5.0.0",
     "eslint-config-oclif-typescript": "^3.0.6",
     "fastify-cli": "^5.8.0",
-    "pkg": "^5.8.1",
     "prettier": "^3.0.3",
-    "tempy": "^3.1.0",
-    "tsx": "^3.14.0",
     "typedoc": "^0.25.2",
-    "typedoc-theme-hierarchy": "^4.1.2",
-    "vite-node": "^0.34.6",
-    "vitest": "^0.34.6"
+    "typedoc-theme-hierarchy": "^4.1.2"
   }
 }

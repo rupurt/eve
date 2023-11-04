@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "include": ["src/**/*"],
+  "exclude": ["src/**/*.test.ts"],
+  "compilerOptions": {
+    "module": "umd",
+    "rootDir": "src",
+    "outDir": "umd"
+  },
+  "references": [
+    {
+      "path": "../protocol/tsconfig.umd.json"
+    }
+  ]
+}

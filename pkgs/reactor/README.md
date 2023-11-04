@@ -7,7 +7,7 @@ Reactive event loop for timers and events
 References [examples](./examples) are available. You can run the task
 
 ```shell
-> npm run examples -w @evereactor/examples
+> npm run examples -w @evereactor/reactor
 ```
 
 ## Usage
@@ -15,7 +15,7 @@ References [examples](./examples) are available. You can run the task
 ### Typescript
 
 ```shell
-> npx tsx pkgs/reactor/examples/ts/main.ts
+> npm run examples:ts -w @evereactor/reactor
 {"level":30,"time":1698650828459,"pid":487331,"hostname":"my-machine","msg":"example starting"}
 {"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:begin"}
 {"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:end"}
@@ -143,7 +143,7 @@ function checkExample(
 ### ESM
 
 ```shell
-> node --experimental-detect-module pkgs/reactor/examples/esm/main.mjs
+> npm run examples:esm -w @evereactor/reactor
 {"level":30,"time":1698650828459,"pid":487331,"hostname":"my-machine","msg":"example starting"}
 {"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:begin"}
 {"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:end"}
@@ -162,7 +162,7 @@ import EventEmitter from 'node:events';
 ### CJS
 
 ```shell
-> node pkgs/reactor/examples/cjs/main.cjs
+> npm run examples:cjs -w @evereactor/reactor
 {"level":30,"time":1698650828459,"pid":487331,"hostname":"my-machine","msg":"example starting"}
 {"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:begin"}
 {"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:end"}
@@ -181,7 +181,7 @@ const EventEmitter = require('node:events');
 ### UMD
 
 ```shell
-> node pkgs/reactor/examples/umd/main.js
+> npm run examples:umd -w @evereactor/reactor
 {"level":30,"time":1698650828459,"pid":487331,"hostname":"my-machine","msg":"example starting"}
 {"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:begin"}
 {"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:end"}

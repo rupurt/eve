@@ -63,34 +63,6 @@ services:
     depends_on:
       - minio
 
-  cluster-1:
-    image: evereactor/cluster:0.0.1
-    ports:
-      - "8101:8100"
-    environment:
-      - FOO=bar
-    volumes:
-      - cluster_1_var_lib:/var/lib/eve/broker
-    depends_on:
-      - broker-1
-      - broker-2
-      - broker-3
-      - broker-4
-
-  cluster-2:
-    image: evereactor/cluster:0.0.1
-    ports:
-      - "8102:8100"
-    environment:
-      - FOO=bar
-    volumes:
-      - cluster_2_var_lib:/var/lib/eve/broker
-    depends_on:
-      - broker-1
-      - broker-2
-      - broker-3
-      - broker-4
-
   kafkagateway:
     image: evereactor/kafka:0.0.1
     ports:
@@ -102,5 +74,3 @@ volumes:
   broker_2_var_lib: {}
   broker_3_var_lib: {}
   broker_4_var_lib: {}
-  cluster_1_var_lib: {}
-  cluster_2_var_lib: {}

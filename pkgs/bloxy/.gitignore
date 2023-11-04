@@ -3,5 +3,6 @@ node_modules
 esm
 cjs
 umd
+bin
 public
 coverage

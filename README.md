@@ -4,20 +4,18 @@ Reactive event driven applications with bottomless storage
 
 ## Packages
 
-| Name                                                |                                                   |
-| --------------------------------------------------- | ------------------------------------------------- |
-| [@evereactor/bloxy](./pkgs/bloxy)                   | Object storage proxy and metadata cache           |
-| [@evereactor/broker](./pkgs/broker)                 | Broker for event streaming                        |
-| [@evereactor/client](./pkgs/client)                 | Typescript client SDK                             |
-| [@evereactor/cluster](./pkgs/cluster)               | Distributed event streaming cluster               |
-| [@evereactor/core](./pkgs/core)                     | Core event streaming library                      |
-| [@evereactor/evectl](./pkgs/evectl)                 | Eve command line tool                             |
-| [@evereactor/kafka](./pkgs/kafka)                   | Kafka API compatibility                           |
-| [@evereactor/protocol](./pkgs/protocol)             | Eve protocol library                              |
-| [@evereactor/reactor](./pkgs/reactor)               | Reactive event loop for timers and events         |
-| [@evereactor/storage](./pkgs/storage)               | Storage abstraction for event message structure   |
-| [@evereactor/ucli](./pkgs/ucli)                     | Universal CLI single binary                       |
-| [@evereactor/webui](./pkgs/webui)                   | Web management UI                                 |
+| Name                                    |                                                  |
+| --------------------------------------- | ------------------------------------------------ |
+| [@evereactor/bloxy](./pkgs/bloxy)       | Object storage proxy and metadata cache          |
+| [@evereactor/broker](./pkgs/broker)     | Broker for event streaming                       |
+| [@evereactor/client](./pkgs/client)     | Typescript client SDK                            |
+| [@evereactor/evectl](./pkgs/evectl)     | Eve command line tool                            |
+| [@evereactor/kafka](./pkgs/kafka)       | Kafka API compatibility                          |
+| [@evereactor/protocol](./pkgs/protocol) | Eve protocol library                             |
+| [@evereactor/reactor](./pkgs/reactor)   | Reactive event loop for timers and events        |
+| [@evereactor/storage](./pkgs/storage)   | Storage abstraction for event message structure  |
+| [@evereactor/ucli](./pkgs/ucli)         | Universal CLI single binary                      |
+| [@evereactor/webui](./pkgs/webui)       | Web management UI                                |
 
 ## Docker/OCI
 
@@ -26,8 +24,8 @@ Pre-built docker images are provided on [docker hub](https://hub.docker.com) as 
 
 ## Development
 
-`eve` is a typescript monorepo targeting the `node 18.x` runtime and this repository assumes
-you have [installed nix](https://determinate.systems/posts/determinate-nix-installer).
+`eve` is a typescript monorepo targeting [bun](https://bun.sh) and recent versions of
+[node](https://nodejs.org/en/about/previous-releases). This repository assumes you have [installed nix](https://determinate.systems/posts/determinate-nix-installer).
 
 ```shell
 ./scripts/bootstrap
