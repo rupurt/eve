@@ -6,6 +6,7 @@ Reactive event driven applications with bottomless storage
 
 | Name                                                |                                                   |
 | --------------------------------------------------- | ------------------------------------------------- |
+| [@evereactor/bloxy](./pkgs/bloxy)                   | Object storage proxy and metadata cache           |
 | [@evereactor/broker](./pkgs/broker)                 | Broker for event streaming                        |
 | [@evereactor/client](./pkgs/client)                 | Typescript client SDK                             |
 | [@evereactor/cluster](./pkgs/cluster)               | Distributed event streaming cluster               |
