@@ -34,6 +34,7 @@
           bats
           bun
           nodejs_21
+          oha
         ];
       };
     });
