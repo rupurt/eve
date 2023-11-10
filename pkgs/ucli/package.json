@@ -24,10 +24,6 @@
     "./src/**/*",
     "./esm/**/*"
   ],
-  "exports": {
-    ".": "./src/lib.ts",
-    "./esm": "./esm/lib.js"
-  },
   "engines": {
     "node": ">=18"
   },
@@ -43,15 +39,13 @@
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "coverage": "bun test --coverage",
-    "clean": "npm run clean:esm && npm run clean:cjs && npm run clean:umd && npm run clean:bin && npm run clean:rel",
-    "clean:esm": "rm -f tsconfig.esm.tsbuildinfo && rm -rf esm",
-    "clean:cjs": "rm -f tsconfig.cjs.tsbuildinfo && rm -rf cjs",
-    "clean:umd": "rm -f tsconfig.umd.tsbuildinfo && rm -rf umd",
-    "clean:dist": "rm -rf dist",
+    "clean": "npm run clean:typedoc && npm run clean:esm && npm run clean:bin && npm run clean:rel",
+    "clean:typedoc": "rm -rf public",
+    "clean:esm": "rm -f src/tsconfig.esm.tsbuildinfo && rm -rf esm",
     "clean:bin": "rm -rf bin",
     "clean:rel": "rm -rf rel",
     "typedoc": "typedoc",
-    "build": "npm run build:esm && npm run build:cjs && npm run build:umd && npm run build:exe",
+    "build": "npm run build:esm && npm run build:exe",
     "build:esm": "tsc --build ./src/tsconfig.esm.json",
     "build:exe": "npm run build:exe:linux && npm run build:exe:mac",
     "build:exe:linux": "npm run build:exe:linux:x86_64 && npm run build:exe:linux:aarch64",
@@ -72,42 +66,25 @@
   "prettier": {
     "singleQuote": true
   },
-  "oclif": {
-    "bin": "eve",
-    "dirname": "eve",
-    "commands": "./cjs/commands",
-    "plugins": [
-      "@oclif/plugin-autocomplete"
-    ],
-    "topicSeparator": " ",
-    "topics": {
-      "eve": {
-        "description": "eve subcommands"
-      }
-    }
-  },
   "dependencies": {
+    "@evereactor/bloxy": "^0.0.1",
     "@evereactor/broker": "^0.0.1",
     "@evereactor/client": "^0.0.1",
     "@evereactor/evectl": "^0.0.1",
-    "@oclif/core": "^3.5.0",
-    "@oclif/plugin-autocomplete": "^2.3.10",
-    "@typescript-eslint/eslint-plugin": "^6.7.5",
-    "@typescript-eslint/parser": "^6.7.5",
-    "suppress-experimental-warnings": "^1.1.17",
+    "@evereactor/kafka": "^0.0.1",
+    "@evereactor/webui": "^0.0.1",
+    "clipanion": "^4.0.0-rc.2",
     "verror": "^1.10.1",
     "yaml": "^2.3.2",
     "yamlify-object": "^1.0.0",
     "yamlify-object-colors": "^1.0.3"
   },
   "devDependencies": {
-    "@oclif/prettier-config": "^0.2.1",
-    "@oclif/test": "^3.0.2",
     "@types/prompts": "^2.4.5",
     "@types/verror": "^1.10.7",
+    "@typescript-eslint/eslint-plugin": "^6.7.5",
+    "@typescript-eslint/parser": "^6.7.5",
     "eslint": "^8.51.0",
-    "eslint-config-oclif": "^5.0.0",
-    "eslint-config-oclif-typescript": "^3.0.6",
     "prettier": "^3.0.3",
     "typedoc": "^0.25.2",
     "typedoc-theme-hierarchy": "^4.1.2"

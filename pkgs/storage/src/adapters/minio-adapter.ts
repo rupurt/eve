@@ -1,9 +1,9 @@
 import { Adapter } from './adapter.js';
 
 /**
- * MinIOAdapterOptions
+ * MinIOAdapterConfig
  */
-type MinIOAdapterOptions = {
+type MinIOAdapterConfig = {
   bucketName: string;
   targetPathPrefix: string;
 };
@@ -12,16 +12,12 @@ type MinIOAdapterOptions = {
  * MinIOAdapter
  */
 class MinIOAdapter extends Adapter {
-  private _opts: MinIOAdapterOptions;
+  private _config: MinIOAdapterConfig;
 
-  constructor(opts: MinIOAdapterOptions) {
+  constructor(config: MinIOAdapterConfig) {
     super();
-    this._opts = opts;
-  }
-
-  async init(): Promise<void> {
-    await super.init();
+    this._config = config;
   }
 }
 
-export { MinIOAdapterOptions, MinIOAdapter as Adapter };
+export { MinIOAdapterConfig, MinIOAdapter };

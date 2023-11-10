@@ -1,7 +1,7 @@
 {
   "name": "@evereactor/storage",
   "version": "0.0.1",
-  "description": "storage abstraction for persistent message structure",
+  "description": "persistent storage abstraction to object stores for eve topic and record structures",
   "keywords": [
     "reactive",
     "kappa",
@@ -59,6 +59,7 @@
     "prepublishOnly": "npm run clean && npm run build",
     "examples": "npm run examples:ts && npm run examples:esm && npm run examples:cjs && npm run examples:umd",
     "examples:ts": "bun run examples/ts/main.ts",
+    "examples:tsx": "tsx examples/ts/main.ts",
     "examples:esm": "node --experimental-detect-module examples/esm/main.mjs",
     "examples:cjs": "node examples/cjs/main.cjs",
     "examples:umd": "node examples/umd/main.js"
@@ -76,11 +77,14 @@
     "eslint": "^8.51.0",
     "prettier": "^3.0.3",
     "tempy": "^3.1.0",
+    "tsx": "^4.1.0",
     "typedoc": "^0.25.2",
     "typedoc-theme-hierarchy": "^4.1.2"
   },
   "peerDependencies": {
-    "@google-cloud/storage": "^7.5.0"
+    "@google-cloud/storage": "^7.5.0",
+    "is-stream": "^3.0.0",
+    "node-fetch": "^3.3.2"
   },
   "peerDependenciesMeta": {
     "@google-cloud/storage": {

@@ -43,7 +43,8 @@
     "typecheck": "tsc --noEmit",
     "test": "bun test",
     "coverage": "bun test --coverage",
-    "clean": "npm run clean:esm && npm run clean:bin && npm run clean:rel",
+    "clean": "npm run clean:typedoc && npm run clean:esm && npm run clean:bin && npm run clean:rel",
+    "clean:typedoc": "rm -rf public",
     "clean:esm": "rm -f src/tsconfig.esm.tsbuildinfo && rm -rf esm",
     "clean:bin": "rm -rf bin",
     "clean:rel": "rm -rf rel",
@@ -74,16 +75,20 @@
   },
   "dependencies": {
     "@evereactor/storage": "^0.0.1",
+    "@fastify/swagger": "^8.12.0",
+    "@fastify/swagger-ui": "^1.10.1",
     "clipanion": "^4.0.0-rc.2",
     "convict": "^6.2.4",
     "convict-format-with-validator": "^6.2.0",
     "fastify": "^4.24.3",
+    "fastify-zod": "^1.4.0",
     "pino": "^8.16.1",
-    "suppress-experimental-warnings": "^1.1.17",
+    "typanion": "^3.14.0",
     "verror": "^1.10.1",
     "yaml": "^2.3.2",
     "yamlify-object": "^1.0.0",
-    "yamlify-object-colors": "^1.0.3"
+    "yamlify-object-colors": "^1.0.3",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/convict": "^6.1.5",

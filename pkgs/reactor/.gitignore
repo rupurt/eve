@@ -5,3 +5,4 @@ cjs
 umd
 public
 coverage
+.examples/

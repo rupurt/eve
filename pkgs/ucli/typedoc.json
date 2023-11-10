@@ -5,6 +5,6 @@
   "out": "public/docs",
   "plugin": ["typedoc-theme-hierarchy"],
   "theme": "hierarchy",
-  "tsconfig": "./tsconfig.esm.json",
+  "tsconfig": "./src/tsconfig.esm.json",
   "name": "@evereactor/ucli"
 }

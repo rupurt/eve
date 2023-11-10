@@ -1,8 +1,8 @@
 node_modules
-tsconfig.tsbuildinfo
-lib
-dist
+*.tsbuildinfo
+esm
 bin
 rel
 public
 coverage
+.examples/

@@ -1,13 +1,23 @@
 # @evereactor/storage
 
-Storage abstraction for event message structure
+Persistent storage abstraction to object stores for `eve` topic and record structures
+
+- [x] [LocalAdapter](./src/adapters/local-adapter.ts)
+- [x] [GCSAdapter](./src/adapters/gcs-adapter.ts)
+- [ ] [S3Adapter](./src/adapters/s3-adapter.ts)
+- [ ] [R2Adapter](./src/adapters/r2-adapter.ts)
+- [ ] [MinIOAdapter](./src/adapters/minio-adapter.ts)
 
 ## Examples
 
-References [examples](./examples) are available. You can run the task
+Reference [examples](./examples) are available. You can run the task
 
 ```shell
-> npm run examples -w @evereactor/storage
+$ LOCAL_ADAPTER_ENABLED=true \
+GCS_ADAPTER_ENABLED=true \
+GCS_BUCKET=eve-gcs-bucket \
+GCS_PROJECT_ID=eve \
+npm run examples:ts -w @evereactor/storage
 ```
 
 ## Usage
@@ -15,78 +25,103 @@ References [examples](./examples) are available. You can run the task
 ### Typescript
 
 ```shell
-> npm run examples:ts -w @evereactor/storage
-TODO...
+$ LOCAL_ADAPTER_ENABLED=true \
+GCS_ADAPTER_ENABLED=true \
+GCS_BUCKET=eve-gcs-bucket \
+GCS_PROJECT_ID=eve \
+npm run examples:ts -w @evereactor/storage
+> @evereactor/storage@0.0.1 examples:ts
+> bun run examples/ts/main.ts
+
+Examples
+====================
+LOCAL_ADAPTER_ENABLED: true
+GCS_ADAPTER_ENABLED: true
+
+LocalAdapter
+====================
+#listBuckets
+  - local-bucket-1
+  - local-bucket-2
 ...
 ```
 
 ```ts
 // examples/ts/main.ts
-TODO...
+import fs from 'node:fs';
+import { resolve } from 'node:path';
+import { Storage, StorageType } from '@evereactor/storage';
 
-/**
- * Validate that the example executed correctly. There should be:
- *
- * - 3 emitted events
- * - 1 timeout counter
- * - 2 interval counters
- */
-function checkExample(
-  resolve: (value?: unknown) => void,
-  reject: (reason?: any) => void,
-) {
-  let errors: string[] = [];
+const LOCAL_ADAPTER_ENABLED =
+  process.env.LOCAL_ADAPTER_ENABLED == 'true' || false;
+const GCS_ADAPTER_ENABLED = process.env.GCS_ADAPTER_ENABLED == 'true' || false;
+const GCS_PROJECT_ID = process.env.GCS_PROJECT_ID;
+const GCS_BUCKET = process.env.GCS_BUCKET;
+const HELLO_TXT = 'hello.txt';
 
-  if (emissionCounter !== 3) {
-    errors.push('emissionCounter !== 3');
-  }
-  if (timeoutCounter !== 1) {
-    errors.push('timeoutCounter !== 1');
-  }
-  if (intervalCounter !== MAX_INTERVALS) {
-    errors.push(`timeoutCounter !== ${MAX_INTERVALS}`);
-  }
-
-  if (errors.length > 0) {
-    reject(new Error(errors.join('\n')));
-  }
-  resolve(0);
-}
-
-/**
- * Run the example and log output
- */
 (async () => {
-  reactor.logger.info('example starting');
-  try {
-    await new Promise(example);
-    reactor.stop();
-    reactor.logger.info('example completed successfully');
-    process.exit(0);
-  } catch (err) {
-    reactor.stop();
-    reactor.logger.error(err);
-    reactor.logger.error('example did not complete successfully');
-    process.exit(1);
-  }
-})();
+  console.log('Examples');
+  console.log('====================');
+  console.log('LOCAL_ADAPTER_ENABLED: %o', LOCAL_ADAPTER_ENABLED);
+  console.log('GCS_ADAPTER_ENABLED: %o', GCS_ADAPTER_ENABLED);
+  console.log('');
+
+  /**
+   * LocalAdapter
+   */
+  if (LOCAL_ADAPTER_ENABLED) {
+    const LOCAL_STORAGE_DIR = '.examples/storage/ts';
+    const LOCAL_BUCKET_1 = 'local-bucket-1';
+    const LOCAL_BUCKET_2 = 'local-bucket-2';
+
+    const localAdapter = Storage({
+      type: StorageType.LOCAL,
+      directory: LOCAL_STORAGE_DIR,
+    });
+    await localAdapter.init();
+    console.log('LocalAdapter');
+    console.log('====================');
+
+    fs.mkdirSync(`${LOCAL_STORAGE_DIR}/${LOCAL_BUCKET_1}`, { recursive: true });
+    fs.mkdirSync(`${LOCAL_STORAGE_DIR}/${LOCAL_BUCKET_2}`, { recursive: true });
+    fs.writeFileSync(`${LOCAL_STORAGE_DIR}/other-file.txt`, '');
+    const localBuckets = await localAdapter.listBuckets();
+    console.log('#listBuckets');
+    localBuckets.forEach((b) => {
+      console.log(`  - ${b.name}`);
+    });
+// ...
 ```
 
 ### ESM
 
 ```shell
-> npm run examples:esm -w @evereactor/storage
-{"level":30,"time":1698650828459,"pid":487331,"hostname":"my-machine","msg":"example starting"}
-{"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:begin"}
-{"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:end"}
-...
+$ LOCAL_ADAPTER_ENABLED=true \
+GCS_ADAPTER_ENABLED=true \
+GCS_BUCKET=eve-gcs-bucket \
+GCS_PROJECT_ID=eve \
+npm run examples:esm -w @evereactor/storage
+> @evereactor/storage@0.0.1 examples:esm
+> bun run examples/esm/main.mjs
+
+Examples
+====================
+LOCAL_ADAPTER_ENABLED: true
+GCS_ADAPTER_ENABLED: true
+
+LocalAdapter
+====================
+#listBuckets
+  - local-bucket-1
+  - local-bucket-2
 ...
 ```
 
 ```javascript
 // examples/esm/main.mjs
-import { Reactor } from '@evereactor/reactor/esm';
-import EventEmitter from 'node:events';
+import fs from 'node:fs';
+import { resolve } from 'node:path';
+import { Storage, StorageType } from '@evereactor/storage/esm';
 
 // ...
 ```
@@ -94,18 +129,32 @@ import EventEmitter from 'node:events';
 ### CJS
 
 ```shell
-> npm run examples:cjs -w @evereactor/storage
-{"level":30,"time":1698650828459,"pid":487331,"hostname":"my-machine","msg":"example starting"}
-{"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:begin"}
-{"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:end"}
-...
+$ LOCAL_ADAPTER_ENABLED=true \
+GCS_ADAPTER_ENABLED=true \
+GCS_BUCKET=eve-gcs-bucket \
+GCS_PROJECT_ID=eve \
+npm run examples:cjs -w @evereactor/storage
+> @evereactor/storage@0.0.1 examples:cjs
+> bun run examples/cjs/main.cjs
+
+Examples
+====================
+LOCAL_ADAPTER_ENABLED: true
+GCS_ADAPTER_ENABLED: true
+
+LocalAdapter
+====================
+#listBuckets
+  - local-bucket-1
+  - local-bucket-2
 ...
 ```
 
 ```javascript
 // examples/cjs/main.cjs
-const { Reactor } = require('@evereactor/reactor/cjs');
-const EventEmitter = require('node:events');
+const fs = require('node:fs');
+const { resolve } = require('node:path');
+const { Storage, StorageType } = require('@evereactor/storage/cjs');
 
 // ...
 ```
@@ -113,17 +162,31 @@ const EventEmitter = require('node:events');
 ### UMD
 
 ```shell
-> npm run examples:umd -w @evereactor/storage
-{"level":30,"time":1698650828459,"pid":487331,"hostname":"my-machine","msg":"example starting"}
-{"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:begin"}
-{"level":30,"time":1698650828460,"pid":487331,"hostname":"my-machine","msg":"Reactor#start:end"}
-...
+$ LOCAL_ADAPTER_ENABLED=true \
+GCS_ADAPTER_ENABLED=true \
+GCS_BUCKET=eve-gcs-bucket \
+GCS_PROJECT_ID=eve \
+npm run examples:cjs -w @evereactor/storage
+> @evereactor/storage@0.0.1 examples:umd
+> bun run examples/umd/main.js
+
+Examples
+====================
+LOCAL_ADAPTER_ENABLED: true
+GCS_ADAPTER_ENABLED: true
+
+LocalAdapter
+====================
+#listBuckets
+  - local-bucket-1
+  - local-bucket-2
 ...
 ```
 
 ```javascript
-const { Reactor } = require('@evereactor/reactor/umd');
-const EventEmitter = require('node:events');
+const fs = require('node:fs');
+const { resolve } = require('node:path');
+const { Storage, StorageType } = require('@evereactor/storage/umd');
 
 // ...
 ```

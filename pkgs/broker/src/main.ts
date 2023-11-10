@@ -1,10 +1,16 @@
 import { Builtins, Cli } from 'clipanion';
 
 import { version } from '../package.json';
-import { Context } from './commands/context';
-import { BrokerDefault, BrokerConfig } from './commands';
+import {
+  BrokerContext,
+  BrokerDefault,
+  BrokerConfig,
+  BrokerInit,
+  BrokerStart,
+  BrokerStop,
+} from './commands';
 
-const cli = new Cli<Context>({
+const cli = new Cli<BrokerContext>({
   binaryLabel: `Eve broker`,
   binaryName: 'broker',
   binaryVersion: version,
@@ -17,6 +23,9 @@ cli.register(Builtins.VersionCommand);
 
 cli.register(BrokerDefault);
 cli.register(BrokerConfig);
+cli.register(BrokerInit);
+cli.register(BrokerStart);
+cli.register(BrokerStop);
 
 const argv = process.argv.slice(2);
 if (argv.length == 0) {

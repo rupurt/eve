@@ -1,9 +1,9 @@
 import { Adapter } from './adapter.js';
 
 /**
- * S3AdapterOptions
+ * S3AdapterConfig
  */
-type S3AdapterOptions = {
+type S3AdapterConfig = {
   bucketName: string;
   targetPathPrefix: string;
 };
@@ -12,12 +12,12 @@ type S3AdapterOptions = {
  * S3Adapter
  */
 class S3Adapter extends Adapter {
-  private _opts: S3AdapterOptions;
+  private _config: S3AdapterConfig;
 
-  constructor(opts: S3AdapterOptions) {
+  constructor(config: S3AdapterConfig) {
     super();
-    this._opts = opts;
+    this._config = config;
   }
 }
 
-export { S3AdapterOptions, S3Adapter as Adapter };
+export { S3AdapterConfig, S3Adapter };

@@ -1,7 +1,7 @@
 import { BaseContext } from 'clipanion';
 
-type Context = BaseContext & {
+type UCLIContext = BaseContext & {
   cwd: string;
 };
 
-export { Context };
+export { UCLIContext };

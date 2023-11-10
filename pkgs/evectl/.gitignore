@@ -3,8 +3,8 @@ node_modules
 esm
 cjs
 umd
-dist
 bin
 rel
 public
 coverage
+.examples/

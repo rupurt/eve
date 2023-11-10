@@ -35,11 +35,14 @@
     "clean": "npm run clean --if-present --workspaces",
     "build": "npm run build --if-present --workspaces",
     "release": "npm run release --if-present --workspaces",
-    "examples": "npm run examples --if-present --workspaces"
+    "examples": "npm run examples --if-present --workspaces",
+    "license:check": "license-checker-rseidelsohn --help",
+    "license:summary": "license-checker-rseidelsohn --summary"
   },
   "devDependencies": {
     "@types/node": "^20.8.7",
     "bun-types": "^1.0.8",
+    "license-checker-rseidelsohn": "^4.2.10",
     "tslib": "^2.6.2",
     "typescript": "^5.2.2"
   }

@@ -4,7 +4,7 @@
   "exclude": ["src/**/*.test.ts"],
   "compilerOptions": {
     "rootDir": "src",
-    "outDir": "lib"
+    "outDir": "esm"
   },
   "references": []
 }

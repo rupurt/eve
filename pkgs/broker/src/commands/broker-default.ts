@@ -1,8 +1,8 @@
 import { Command, Option } from 'clipanion';
 
-import { Context } from './context';
+import { BrokerContext } from './broker-context.js';
 
-class BrokerDefault extends Command<Context> {
+class BrokerDefault extends Command<BrokerContext> {
   scriptName = Option.String();
   rest = Option.Proxy();
   // subcommand = Option.Proxy();
@@ -10,7 +10,7 @@ class BrokerDefault extends Command<Context> {
   static paths = [Command.Default];
 
   async execute() {
-    return await this.cli.run(['config', ...this.rest], {});
+    return await this.cli.run(['start', ...this.rest], {});
   }
 }
 

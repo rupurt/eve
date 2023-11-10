@@ -4,22 +4,28 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
+    bun.url = "github:rupurt/bun-nix";
   };
 
   outputs = {
     flake-utils,
     nixpkgs,
+    bun,
     ...
   }: let
     systems = ["x86_64-linux" "aarch64-linux" "x86_64-darwin" "aarch64-darwin"];
     outputs = flake-utils.lib.eachSystem systems (system: let
       pkgs = import nixpkgs {
         inherit system;
-        overlays = [];
+        overlays = [
+          bun.overlay
+        ];
       };
-    in {
+    in rec {
       # packages exported by the flake
-      packages = {};
+      packages = {
+        bun = pkgs.bun {};
+      };
 
       # nix run
       apps = {};
@@ -32,7 +38,7 @@
         name = "default dev shell";
         packages = with pkgs; [
           bats
-          bun
+          packages.bun
           nodejs_21
           oha
         ];

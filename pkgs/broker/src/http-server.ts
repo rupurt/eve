@@ -1,160 +1,89 @@
-import Fastify, { FastifyInstance, RouteShorthandOptions } from 'fastify';
-// import { Server, IncomingMessage, ServerResponse } from 'http';
+import type { FastifyZod } from 'fastify-zod';
 
-type HTTPServerOptions = {
-  // TOOD: maybe IP address type ???
-  host: string;
-  port: number;
-};
+import Fastify from 'fastify';
+import { buildJsonSchemas, register } from 'fastify-zod';
 
-class HTTPServer {
-  private _options: HTTPServerOptions;
-  private _httpServer: FastifyInstance;
+import { Logger } from './logger.js';
+import { models } from './models.js';
 
-  constructor(options: HTTPServerOptions) {
-    this._options = options;
-    this._httpServer = Fastify({});
-
-    this._httpServer.addHook('onRequest', (request, reply, done) => {
-      console.log('####################### on request');
-      console.log(request);
-      console.log(reply);
-      // Some code
-      done();
-    });
-
-    const pingOpts: RouteShorthandOptions = {
-      schema: {
-        response: {
-          200: {
-            type: 'object',
-            properties: {
-              pong: {
-                type: 'string',
-              },
-            },
-          },
-        },
-      },
-    };
-
-    this._httpServer.get('/ping', pingOpts, async (request, reply) => {
-      return { pong: 'it worked!' };
-    });
-
-    const getTopicsOpts: RouteShorthandOptions = {
-      schema: {
-        response: {
-          200: {
-            type: 'object',
-            properties: {
-              msg: {
-                type: 'string',
-              },
-            },
-          },
-        },
-      },
-    };
-
-    this._httpServer.get(
-      '/api/v1/topics',
-      getTopicsOpts,
-      async (request, reply) => {
-        return { msg: 'GET /api/v1/topics' };
-      },
-    );
-
-    const postTopicsOpts: RouteShorthandOptions = {
-      schema: {
-        response: {
-          200: {
-            type: 'object',
-            properties: {
-              msg: {
-                type: 'string',
-              },
-            },
-          },
-        },
-      },
-    };
-
-    this._httpServer.post(
-      '/api/v1/topics',
-      postTopicsOpts,
-      async (request, reply) => {
-        return { msg: 'POST /api/v1/topics' };
-      },
-    );
-
-    const getRecordsOpts: RouteShorthandOptions = {
-      schema: {
-        response: {
-          200: {
-            type: 'object',
-            properties: {
-              msg: {
-                type: 'string',
-              },
-            },
-          },
-        },
-      },
-    };
-
-    this._httpServer.get(
-      '/api/v1/records',
-      getRecordsOpts,
-      async (request, reply) => {
-        return { msg: 'GET api/v1/records' };
-      },
-    );
-
-    const postRecordsOpts: RouteShorthandOptions = {
-      schema: {
-        response: {
-          200: {
-            type: 'object',
-            properties: {
-              msg: {
-                type: 'string',
-              },
-            },
-          },
-        },
-      },
-    };
-
-    this._httpServer.post(
-      '/api/v1/records',
-      postRecordsOpts,
-      async (request, reply) => {
-        return { msg: 'POST /api/v1/records' };
-      },
-    );
-  }
-
-  async listen() {
-    try {
-      await this._httpServer.listen({
-        host: this._options.host,
-        port: this._options.port,
-      });
-
-      const address = this._httpServer.server.address();
-      const port = typeof address === 'string' ? address : address?.port;
-
-      console.log('server listening - address=%o, port=%o', address, port);
-    } catch (err) {
-      this._httpServer.log.error(err);
-      process.exit(1);
-    }
-  }
-
-  async close() {
-    return this._httpServer.close();
+// Global augmentation, as suggested by
+// https://www.fastify.io/docs/latest/Reference/TypeScript/#creating-a-typescript-fastify-plugin
+declare module 'fastify' {
+  interface FastifyInstance {
+    readonly zod: FastifyZod<typeof models>;
   }
 }
 
-export { HTTPServerOptions, HTTPServer };
+/**
+ * HTTPServer
+ */
+class HTTPServer {
+  private _opts: HTTPServerConfig;
+  private _fastify: ReturnType<typeof Fastify>;
+  private _logger: ReturnType<typeof Logger>;
+
+  constructor(opts: HTTPServerConfig) {
+    this._opts = opts;
+    this._logger = opts?.logger || Logger({});
+    this._fastify = Fastify({ logger: true });
+  }
+
+  /**
+   * Register route schemas
+   */
+  async registerRouteSchemas(): Promise<void> {
+    await register(this._fastify, {
+      jsonSchemas: buildJsonSchemas(models),
+      // swaggerOptions: {
+      //   // See https://github.com/fastify/fastify-swagger
+      // },
+      // swaggerUiOptions: {
+      //   // See https://github.com/fastify/fastify-swagger-ui
+      // },
+      // transformSpec: {
+      //   // optional, see below
+      // },
+    });
+  }
+
+  /**
+   * Add a route to the fastify http server
+   *
+   */
+  addRoute(callback: (zod: FastifyZod<typeof models>) => void) {
+    return callback(this._fastify.zod);
+  }
+
+  /**
+   * Listen on the fastify http server
+   *
+   * @returns void
+   */
+  async listen(): Promise<void> {
+    const opts = { host: this._opts.host, port: this._opts.port };
+    const address = await this._fastify.listen(opts);
+
+    this._logger.info(`broker listening on address="${address}"`);
+  }
+
+  /**
+   * Close the fastify http server
+   *
+   * @returns a promise encapsulating undefined
+   */
+  close(): Promise<undefined> {
+    return this._fastify.close();
+  }
+}
+
+/**
+ * HTTPServerOptions
+ */
+type HTTPServerConfig = {
+  // TOOD: maybe IP address type ???
+  host: string;
+  port: number;
+  logger?: ReturnType<typeof Logger>;
+};
+
+export { HTTPServer, HTTPServerConfig };

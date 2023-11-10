@@ -4,7 +4,7 @@ import { Producer, Logger } from '@evereactor/client';
 const logger = Logger({ level: 'trace' });
 
 const producer = new Producer({
-  brokers: ['localhost:19092'],
+  brokers: ['http://localhost:19092'],
   topic: 'eve.example.client',
   logger: logger,
 });

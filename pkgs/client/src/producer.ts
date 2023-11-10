@@ -61,24 +61,23 @@ class Producer {
   ): Promise<ProducerAck> {
     return new Promise(async (resolve, reject) => {
       this._logger.debug(`${this.constructor.name}#send begin`);
-      this._logger.debug(`${this.constructor.name} record - %o`, record);
-      this._logger.debug(`${this.constructor.name}#send end`);
 
-      const brokerUrl = `http://${this._brokers[0]}`;
-
-      this._logger.debug('@@@@@@@@@@ BROKER URL: %o', brokerUrl);
-
-      return fetch(brokerUrl, {
+      const produceUrl = `${this._brokers[0]}/api/v1/records`;
+      return fetch(produceUrl, {
         method: 'POST',
-        body: JSON.stringify({ message: 'Hello from Bun!' }),
+        // body: JSON.stringify({ message: 'Hello from Bun!' }),
+        body: record.value,
         headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
       })
-        .then((response) => {
-          this._logger.debug('@@@@@@@@@@ RESPONSE: %o', response);
+        .then((_response) => {
           resolve({ offset: 1n });
         })
         .catch((err) => {
           reject(err);
+        })
+        .finally(() => {
+          this._logger.debug(`${this.constructor.name}#send end`);
         });
     });
   }

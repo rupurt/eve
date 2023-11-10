@@ -3,67 +3,27 @@
 Broker node receiving messages
 
 ```shell
-$ broker
-eve broker
+$ broker --help
+━━━ Eve broker - 0.0.1 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-VERSION
-  @evereactor/broker/0.0.1 linux-x64 node-v18.5.0
+  $ broker <command>
 
-USAGE
-  $ broker [COMMAND]
+━━━ General commands ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-COMMANDS
-  autocomplete  display autocomplete installation instructions
-  config        display broker configuration
-  init          initialize broker configuration
-  start         start the broker
+  broker config [-c,--config #0]
+    display broker configuration
+
+  broker init [-c,--config #0] [-r,--replace]
+    initialize a brokers configuration file
+
+  broker start [-c,--config #0] [-h,--host #0] [-p,--port]
+    start a broker with a http listener
+
+  broker stop [-h,--host #0] [-p,--port]
+    stop a running broker via it's http listener
+
+You can also print more details about any of these commands by calling them with
+the `-h,--help` flag right after the command name.
 ```
 
-## Commands
-
-- [autocomplete](#autocomplete)
-- [config](#config)
-- [init](#init)
-- [start](#start)
-
-### autocomplete
-
-```shell
-$ broker autocomplete
-Building the autocomplete cache... done
-
-Setup Instructions for BROKER CLI Autocomplete ---
-
-1) Add the autocomplete env var to your zsh profile and source it
-
-$ printf "eval $(broker autocomplete script zsh)" >> ~/.zshrc; source ~/.zshrc
-
-NOTE: After sourcing, you can run `$ compaudit -D` to ensure no permissions conflicts are present
-
-2) Test it out, e.g.:
-$ broker <TAB>                 # Command completion
-$ broker command --<TAB>       # Flag completion
-
-Enjoy!
-```
-
-### config
-
-```shell
-$ broker config
-TODO... config
-```
-
-### init
-
-```shell
-$ broker init
-TODO... init
-```
-
-### start
-
-```shell
-$ broker start
-TODO... start
-```
+- [commands](./docs/COMMANDS.md)

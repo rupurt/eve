@@ -4,7 +4,7 @@ Reactive event loop for timers and events
 
 ## Examples
 
-References [examples](./examples) are available. You can run the task
+Reference [examples](./examples) are available. You can run the task
 
 ```shell
 > npm run examples -w @evereactor/reactor

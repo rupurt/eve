@@ -1,9 +1,9 @@
 import { Adapter } from './adapter.js';
 
 /**
- * R2AdapterOptions
+ * R2AdapterConfig
  */
-type R2AdapterOptions = {
+type R2AdapterConfig = {
   bucketName: string;
   targetPathPrefix: string;
 };
@@ -12,16 +12,12 @@ type R2AdapterOptions = {
  * R2Adapter
  */
 class R2Adapter extends Adapter {
-  private _opts: R2AdapterOptions;
+  private _config: R2AdapterConfig;
 
-  constructor(opts: R2AdapterOptions) {
+  constructor(config: R2AdapterConfig) {
     super();
-    this._opts = opts;
-  }
-
-  async init(): Promise<void> {
-    await super.init();
+    this._config = config;
   }
 }
 
-export { R2AdapterOptions, R2Adapter as Adapter };
+export { R2AdapterConfig, R2Adapter };

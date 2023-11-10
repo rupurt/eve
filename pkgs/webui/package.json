@@ -18,11 +18,11 @@
     "type": "git",
     "url": "https://github.com/rupurt/eve/tree/main/pkgs/webui"
   },
-  "main": "./src/lib.ts",
-  "types": "./src/lib.ts",
+  "main": "./src/main.ts",
+  "types": "./src/main.ts",
   "exports": {
-    ".": "./src/lib.ts",
-    "./esm": "./esm/lib.js"
+    ".": "./src/main.ts",
+    "./esm": "./esm/main.js"
   },
   "engines": {
     "node": ">=18"
@@ -41,12 +41,12 @@
     "test": "bun test",
     "coverage": "bun test --coverage",
     "clean": "npm run clean:esm && npm run clean:bin && npm run clean:rel",
-    "clean:esm": "rm -f src/tsconfig.esm.tsbuildinfo && rm -rf esm",
+    "clean:esm": "rm -f tsconfig.esm.tsbuildinfo && rm -rf esm",
     "clean:bin": "rm -rf bin",
     "clean:rel": "rm -rf rel",
     "typedoc": "typedoc",
     "build": "npm run build:esm && npm run build:exe",
-    "build:esm": "tsc --build ./src/tsconfig.esm.json",
+    "build:esm": "tsc --build ./tsconfig.esm.json",
     "build:exe": "npm run build:exe:linux && npm run build:exe:mac",
     "build:exe:linux": "npm run build:exe:linux:x86_64 && npm run build:exe:linux:aarch64",
     "build:exe:linux:x86_64": "bun build src/main.ts --compile --target bun --outfile bin/webui-linux-x86_64",
@@ -66,19 +66,7 @@
   "prettier": {
     "singleQuote": true
   },
-  "oclif": {
-    "bin": "webui",
-    "dirname": "webui",
-    "commands": "./lib/commands",
-    "plugins": [
-      "@oclif/plugin-autocomplete"
-    ],
-    "topicSeparator": " ",
-    "topics": {}
-  },
   "dependencies": {
-    "@oclif/core": "^3.5.0",
-    "@oclif/plugin-autocomplete": "^2.3.10",
     "@typescript-eslint/eslint-plugin": "^6.7.5",
     "@typescript-eslint/parser": "^6.7.5",
     "convict": "^6.2.4",
@@ -91,14 +79,10 @@
     "yamlify-object-colors": "^1.0.3"
   },
   "devDependencies": {
-    "@oclif/prettier-config": "^0.2.1",
-    "@oclif/test": "^3.0.2",
     "@types/convict": "^6.1.5",
     "@types/prompts": "^2.4.5",
     "@types/verror": "^1.10.7",
     "eslint": "^8.51.0",
-    "eslint-config-oclif": "^5.0.0",
-    "eslint-config-oclif-typescript": "^3.0.6",
     "fastify-cli": "^5.8.0",
     "prettier": "^3.0.3",
     "typedoc": "^0.25.2",

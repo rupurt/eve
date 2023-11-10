@@ -1,9 +1,19 @@
-import type { LocalAdapterOptions } from './adapters/local-adapter.js';
-import type { GCSAdapterOptions } from './adapters/gcs-adapter.js';
-import type { S3AdapterOptions } from './adapters/s3-adapter.js';
-import type { R2AdapterOptions } from './adapters/r2-adapter.js';
-import type { MinIOAdapterOptions } from './adapters/minio-adapter.js';
-import { Adapter } from './adapters/adapter.js';
+import { Readable } from 'node:stream';
+
+import {
+  Adapter,
+  GCSAdapter,
+  GCSAdapterConfig,
+  LocalAdapter,
+  LocalAdapterConfig,
+  MinIOAdapter,
+  MinIOAdapterConfig,
+  R2Adapter,
+  R2AdapterConfig,
+  S3Adapter,
+  S3AdapterConfig,
+} from './adapters/index.js';
+import { NotImplementedError } from './errors.js';
 
 /**
  * StorageType
@@ -17,49 +27,49 @@ enum StorageType {
 }
 
 /**
- * LocalStorageOptions
+ * LocalStorageConfig
  */
-type LocalStorageOptions = LocalAdapterOptions & {
+type LocalStorageConfig = LocalAdapterConfig & {
   type: StorageType.LOCAL;
 };
 
 /**
- * GCSStorageOptions
+ * GCSStorageConfig
  */
-type GCSStorageOptions = GCSAdapterOptions & {
+type GCSStorageConfig = GCSAdapterConfig & {
   type: StorageType.GCS;
 };
 
 /**
- * S3StorageOptions
+ * S3StorageConfig
  */
-type S3StorageOptions = S3AdapterOptions & {
+type S3StorageConfig = S3AdapterConfig & {
   type: StorageType.S3;
 };
 
 /**
- * R2StorageOptions
+ * R2StorageConfig
  */
-type R2StorageOptions = R2AdapterOptions & {
+type R2StorageConfig = R2AdapterConfig & {
   type: StorageType.R2;
 };
 
 /**
- * MinIOStorageOptions
+ * MinIOStorageConfig
  */
-type MinIOStorageOptions = MinIOAdapterOptions & {
+type MinIOStorageConfig = MinIOAdapterConfig & {
   type: StorageType.MINIO;
 };
 
 /**
- * StorageOptions
+ * StorageConfig
  */
-type StorageOptions =
-  | LocalStorageOptions
-  | GCSStorageOptions
-  | S3StorageOptions
-  | R2StorageOptions
-  | MinIOStorageOptions;
+type StorageConfig =
+  | LocalStorageConfig
+  | GCSStorageConfig
+  | S3StorageConfig
+  | R2StorageConfig
+  | MinIOStorageConfig;
 
 /**
  * StorageContainer
@@ -71,28 +81,85 @@ class StorageContainer {
     this._adapter = adapter;
   }
 
-  init() {
-    this._adapter.init();
+  init(): ReturnType<Adapter['init']> {
+    return this._adapter.init();
+  }
+
+  listBuckets(): ReturnType<Adapter['listBuckets']> {
+    return this._adapter.listBuckets();
+  }
+
+  getFiles(bucketName: string): ReturnType<Adapter['getFiles']> {
+    return this._adapter.getFiles(bucketName);
+  }
+
+  fileExists(
+    bucketName: string,
+    fileName: string,
+  ): ReturnType<Adapter['fileExists']> {
+    return this._adapter.fileExists(bucketName, fileName);
+  }
+
+  downloadFile(
+    bucketName: string,
+    fileName: string,
+    targetPath: string,
+  ): ReturnType<Adapter['downloadFile']> {
+    return this._adapter.downloadFile(bucketName, fileName, targetPath);
+  }
+
+  writeStream(
+    bucketName: string,
+    artifact: Buffer | Readable,
+    targetPath: string,
+  ): Promise<string> {
+    return this._adapter.writeStream(bucketName, artifact, targetPath);
   }
 }
 
 /**
  * Storage
  */
-async function Storage(opts: StorageOptions): Promise<StorageContainer> {
-  const { Adapter } = await import(`./adapters/${opts.type}-adapter.js`);
-  const adapter: Adapter = new Adapter(opts);
+function Storage(config: StorageConfig): StorageContainer {
+  let adapter: Adapter;
+
+  switch (config.type) {
+    case StorageType.LOCAL: {
+      adapter = new LocalAdapter(config);
+      break;
+    }
+    case StorageType.S3: {
+      adapter = new S3Adapter(config);
+      break;
+    }
+    case StorageType.GCS: {
+      adapter = new GCSAdapter(config);
+      break;
+    }
+    case StorageType.MINIO: {
+      adapter = new MinIOAdapter(config);
+      break;
+    }
+    case StorageType.R2: {
+      adapter = new R2Adapter(config);
+      break;
+    }
+    default: {
+      throw new NotImplementedError('storage adapter not implemented');
+    }
+  }
+
   return new StorageContainer(adapter);
 }
 
 export {
   StorageType,
-  LocalStorageOptions,
-  GCSStorageOptions,
-  S3StorageOptions,
-  R2StorageOptions,
-  MinIOStorageOptions,
-  StorageOptions,
+  LocalStorageConfig,
+  GCSStorageConfig,
+  S3StorageConfig,
+  R2StorageConfig,
+  MinIOStorageConfig,
+  StorageConfig,
   StorageContainer,
   Storage,
 };

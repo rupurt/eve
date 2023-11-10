@@ -1,5 +1,6 @@
 import { Worker } from 'node:worker_threads';
-import { Broker, BrokerOptions } from '@evereactor/broker';
+import { Broker, BrokerConfig } from '@evereactor/broker';
+import { LocalStorageConfig, StorageType } from '@evereactor/storage';
 import { Logger } from '@evereactor/client';
 
 const TIMEOUT = 5000;
@@ -8,8 +9,16 @@ class TimeoutError extends Error {}
 
 const logger = Logger({ level: 'trace' });
 
-const brokerOpts: BrokerOptions = { http: { host: '::', port: 19092 } };
-const broker = new Broker(brokerOpts);
+const storageConfig: LocalStorageConfig = {
+  type: StorageType.LOCAL,
+  directory: '.examples/broker1',
+};
+
+const brokerConfig: BrokerConfig = {
+  storage: storageConfig,
+  http: { host: '[::]', port: 19092 },
+};
+const broker = new Broker(brokerConfig);
 
 const producerWorker = new Worker(
   new URL('./example-producer.js', import.meta.url),
@@ -21,7 +30,7 @@ const consumerWorker = new Worker(
 );
 let consumerFinished = false;
 
-const example = new Promise((resolve, reject) => {
+const example = new Promise(async (resolve, reject) => {
   producerWorker.on('message', (event) => {
     if (event == 'finished') {
       producerFinished = true;
@@ -41,7 +50,7 @@ const example = new Promise((resolve, reject) => {
     }
   });
 
-  broker.listen();
+  await broker.listen();
   producerWorker.postMessage('start');
   consumerWorker.postMessage('start');
 
