@@ -1,56 +1,148 @@
+import z from 'zod';
 import { Storage, StorageConfig } from '@evereactor/storage';
 
 import { Logger } from './logger.js';
-import { HTTPServer, HTTPServerConfig } from './http-server.js';
-import { TopicCompressionType } from './models.js';
+import {
+  CompressionType,
+  CreateTopic,
+  CreateTopicResult,
+  Topic,
+  CreateRecord,
+  CreateRecordResult,
+  Record,
+  ListRecords,
+} from './models';
 
 /**
- * The `Broker` class is the main entry point for the broker.
+ * Broker's are responsible for storing and fullfilling requests for records in topics.
  */
 class Broker {
-  private _config: BrokerConfig;
   private _logger: ReturnType<typeof Logger>;
   private _storage: ReturnType<typeof Storage>;
-  private _httpServer: HTTPServer;
 
   /**
    * Create a new `Broker` instance
    *
    * ```ts
-   * const broker = new Broker({ http: { host: '::', port: 8080 } });
+   * const storageConfig = {};
+   * const broker = new Broker({ storage: storageConfig });
    * ```
    *
    * @param config - broker options
    * @returns a new `Broker` instance
    */
   constructor(config: BrokerConfig) {
-    this._config = config;
     this._logger = config.logger || Logger({});
     this._storage = Storage(config.storage);
-    this._httpServer = new HTTPServer(this._config.http);
   }
 
   /**
-   * Start the broker. This includes starting the http server
+   * Create a new topic
    *
-   * ```ts
-   * broker.listen();
-   * ```
+   * @param topics - the topics to create
+   * @returns a promise listener
+   */
+  async createTopics(
+    topics: z.infer<typeof CreateTopic>[],
+  ): Promise<z.infer<typeof CreateTopicResult>[]> {
+    const results = topics.map((ct) => {
+      const topic = {
+        name: ct.name,
+        partitions: ct.partitions,
+        compression: ct.compression || CompressionType.NONE,
+      };
+      // this._storage.writeStream('todo-eve-instance', );
+      return {
+        topic: topic,
+        // error: 'TODO',
+      };
+    });
+
+    return results;
+  }
+
+  /**
+   * List all topics
    *
    * @returns a promise listener
    */
-  async listen(): Promise<ReturnType<typeof HTTPServer.prototype.listen>> {
-    this._logger.info(
-      `starting broker storage type="${this._config.storage.type}"`,
-    );
+  async listTopics(): Promise<z.infer<typeof Topic>[]> {
+    return [
+      { name: 'test-topic', partitions: 3n, compression: CompressionType.NONE },
+    ];
+  }
 
-    await this._storage.init();
+  /**
+   * Get a topic by name
+   *
+   * @param name - the name of the topic to get
+   * @returns a promise listener
+   */
+  async getTopic(name: string): Promise<z.infer<typeof Topic>> {
+    return {
+      name: name,
+      partitions: 3n,
+      compression: CompressionType.NONE,
+    };
+  }
 
-    await this._httpServer.registerRouteSchemas();
-    this._addPingRoute();
-    this._addTopicRoutes();
-    this._addRecordRoutes();
-    return this._httpServer.listen();
+  /**
+   * Delete a topic
+   *
+   * @param name - the name of the topic to delete
+   * @returns a promise listener
+   */
+  async deleteTopic(_name: string): Promise<void> {}
+
+  /**
+   * Create records in a topic
+   *
+   * @param records - the records to create
+   * @returns a promise listener
+   */
+  async createRecords(
+    records: z.infer<typeof CreateRecord>[],
+  ): Promise<z.infer<typeof CreateRecordResult>[]> {
+    const results = records.map((cr) => {
+      const record = {
+        topic: cr.topic,
+        partition: cr.partition,
+        offset: 0n,
+        compression: cr.compression || CompressionType.NONE,
+        timestamp: 0n,
+        key: cr.key,
+        value: cr.value,
+      };
+      // this._storage.writeStream('todo-eve-instance', );
+      return {
+        record: record,
+        // error: 'TODO',
+      };
+    });
+
+    return results;
+  }
+
+  /**
+   * List records from a topic
+   *
+   * @param params - the params to list records
+   * @returns a promise listener
+   */
+  async listRecords(
+    _params: z.infer<typeof ListRecords>,
+  ): Promise<z.infer<typeof Record>[]> {
+    return [
+      {
+        topic: 'todo-topic',
+        partition: 0n,
+        offset: 0n,
+        timestamp: 0n,
+        compression: CompressionType.NONE,
+        key: Buffer.from('todo-record-key'),
+        value: Buffer.from('todo-record-value'),
+      },
+    ];
   }
 
   /**
@@ -62,107 +154,8 @@ class Broker {
    *
    * @returns a promise listener
    */
-  close(): ReturnType<typeof HTTPServer.prototype.close> {
+  async close(): Promise<void> {
     this._logger.info('stopping broker');
-    return this._httpServer.close();
-  }
-
-  private _addPingRoute() {
-    this._httpServer.addRoute((zod) => {
-      zod.get(
-        '/api/v1/ping',
-        {
-          operationId: 'ping',
-          reply: 'Pong',
-        },
-        async () => {
-          return { pong: Date.now() };
-        },
-      );
-    });
-  }
-
-  private _addTopicRoutes() {
-    this._httpServer.addRoute((zod) => {
-      zod.get(
-        '/api/v1/topics',
-        {
-          operationId: 'listTopics',
-          reply: 'Topics',
-        },
-        async () => {
-          const topics = [
-            { id: 'todo-topic', compression: TopicCompressionType.NONE },
-          ];
-
-          return { topics };
-        },
-      );
-    });
-    this._httpServer.addRoute((zod) => {
-      zod.post(
-        '/api/v1/topics',
-        {
-          operationId: 'createTopic',
-          reply: 'CreateTopicResult',
-        },
-        async () => {
-          return {};
-        },
-      );
-    });
-    this._httpServer.addRoute((zod) => {
-      zod.get(
-        '/api/v1/topics/:id',
-        {
-          operationId: 'getTopic',
-          reply: 'Topic',
-        },
-        async () => {
-          return {
-            id: 'todo-topic',
-            compression: TopicCompressionType.NONE,
-          };
-        },
-      );
-    });
-  }
-
-  private _addRecordRoutes() {
-    this._httpServer.addRoute((zod) => {
-      zod.get(
-        '/api/v1/records',
-        {
-          operationId: 'listRecords',
-          reply: 'Records',
-        },
-        async () => {
-          const records = [
-            {
-              topic: 'todo-topic',
-              offset: 0n,
-              timestamp: 0n,
-              key: 'todo-record',
-              value: 'todo-value',
-            },
-          ];
-
-          return { records };
-        },
-      );
-    });
-    this._httpServer.addRoute((zod) => {
-      zod.post(
-        '/api/v1/records',
-        {
-          operationId: 'createRecord',
-          reply: 'CreateRecordResult',
-        },
-        async () => {
-          return {};
-        },
-      );
-    });
   }
 }
 
@@ -172,7 +165,6 @@ class Broker {
 type BrokerConfig = {
   logger?: ReturnType<typeof Logger>;
   storage: StorageConfig;
-  http: HTTPServerConfig;
 };
 
 export { Broker, BrokerConfig };

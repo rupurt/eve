@@ -1,10 +1,15 @@
 import { Command, Option } from 'clipanion';
-import { LocalStorageConfig, StorageType } from '@evereactor/storage';
-
-import { Logger } from '../logger.js';
-import { Broker, BrokerConfig } from '../broker.js';
+// import { StorageConfig, StorageType } from '@evereactor/storage';
+//
+// import { Logger } from '../logger.js';
+// import { Broker, BrokerConfig } from '../broker.js';
 import { BrokerContext } from './broker-context.js';
 import { isPort } from './validations.js';
+import {
+  BrokerFactory,
+  BrokerServerFactory,
+  DEFAULT_HTTP_SERVER_CONFIG,
+} from '../factories';
 
 class BrokerStart extends Command<BrokerContext> {
   config = Option.String('-c,--config', 'eve.broker.yaml', {
@@ -36,23 +41,34 @@ class BrokerStart extends Command<BrokerContext> {
 
   static paths = [['start']];
   async execute() {
-    const logger = Logger({ level: this.logLevel });
-    const storageConfig: LocalStorageConfig = {
-      type: StorageType.LOCAL,
-      directory: '.eve/broker1',
-    };
-    const httpConfig = { host: this.host, port: this.port };
-    const config: BrokerConfig = {
-      logger: logger,
-      storage: storageConfig,
-      http: httpConfig,
-    };
-    const broker = new Broker(config);
+    // const logger = Logger({ level: this.logLevel });
+    // const storageConfig: StorageConfig = {
+    //   type: StorageType.LOCAL,
+    //   directory: '.eve/broker1',
+    // };
+    // const httpConfig = { host: this.host, port: this.port };
+    // const config: BrokerConfig = {
+    //   logger: logger,
+    //   storage: storageConfig,
+    //   http: httpConfig,
+    // };
+    // const broker = Broker(config);
+    //
+    // process.once('SIGINT', async () => await broker.close());
+    // process.once('SIGTERM', async () => await broker.close());
+    //
+    // broker.listen();
 
-    process.once('SIGINT', async () => await broker.close());
-    process.once('SIGTERM', async () => await broker.close());
+    const broker = BrokerFactory.create();
+    const childConfigs = [
+      { ...DEFAULT_HTTP_SERVER_CONFIG, host: this.host, port: this.port },
+    ];
+    const server = BrokerServerFactory.create(broker, childConfigs);
 
-    broker.listen();
+    process.once('SIGINT', async () => await server.close());
+    process.once('SIGTERM', async () => await server.close());
+
+    server.listen();
   }
 }
 

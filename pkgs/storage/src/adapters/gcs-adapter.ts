@@ -12,8 +12,8 @@ import { Adapter, GetFilesOptions } from './adapter.js';
  * GCSAdapterConfig
  */
 type GCSAdapterConfig = {
-  keyFilename: string;
   projectId: string;
+  keyFilename: string;
 };
 
 /**

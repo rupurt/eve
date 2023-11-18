@@ -4,8 +4,8 @@ import { Adapter } from './adapter.js';
  * S3AdapterConfig
  */
 type S3AdapterConfig = {
-  bucketName: string;
-  targetPathPrefix: string;
+  keyFilename: string;
+  projectId: string;
 };
 
 /**

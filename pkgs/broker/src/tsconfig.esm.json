@@ -1,14 +1,6 @@
 {
-  "extends": "../../../tsconfig.base.json",
+  "extends": "./tsconfig.build.esm.json",
   "include": ["**/*"],
-  "exclude": ["**/*.test.ts"],
-  "compilerOptions": {
-    "rootDir": ".",
-    "outDir": "../esm",
-    "resolveJsonModule": true
-  },
-  "references": [
-    { "path": "../" },
-    { "path": "../../storage/tsconfig.esm.json" }
-  ]
+  "exclude": [],
+  "references": [{ "path": "../" }]
 }

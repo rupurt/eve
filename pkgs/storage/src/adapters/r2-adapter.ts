@@ -4,8 +4,8 @@ import { Adapter } from './adapter.js';
  * R2AdapterConfig
  */
 type R2AdapterConfig = {
-  bucketName: string;
-  targetPathPrefix: string;
+  keyFilename: string;
+  projectId: string;
 };
 
 /**

@@ -4,8 +4,8 @@ import { Adapter } from './adapter.js';
  * MinIOAdapterConfig
  */
 type MinIOAdapterConfig = {
-  bucketName: string;
-  targetPathPrefix: string;
+  keyFilename: string;
+  projectId: string;
 };
 
 /**

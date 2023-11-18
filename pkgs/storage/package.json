@@ -3,10 +3,13 @@
   "version": "0.0.2",
   "description": "persistent storage abstraction to object stores for eve topic and record structures",
   "keywords": [
-    "reactive",
-    "kappa",
-    "events",
-    "event driven",
+    "object storage",
+    "storage abstraction",
+    "local storage",
+    "google cloud storage",
+    "aws s3",
+    "cloudflare r2",
+    "minio",
     "data engineering"
   ],
   "author": {
