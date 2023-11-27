@@ -36,7 +36,7 @@
         name = "default dev shell";
         packages = with pkgs; [
           bats
-          bunpkgs.bun_1_0_13
+          bunpkgs.bun_1_0_14
           nodejs_21
           oha
         ];
